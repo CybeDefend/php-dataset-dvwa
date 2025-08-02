@@ -29,6 +29,9 @@ if (array_key_exists ("id", $_GET) && array_key_exists ("security", $_GET)) {
 		case "exec" :
 			$vuln = 'Command Injection';
 			break;
+		case "netdiag" :
+			$vuln = 'Network Diagnostics';
+			break;
 		case "sqli" :
 			$vuln = 'SQL Injection';
 			break;
