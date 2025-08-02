@@ -1,278 +1,132 @@
 [
     {
         "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
-        "vulnerabilityId": "1ef7e3ff-9022-418c-ada8-3283b726b599",
+        "vulnerabilityId": "200eaaf7-1d51-4eac-b753-1f7dffdffc8b",
         "sast": {
+            "dataFlowItems": [
+                {
+                    "code": [
+                        {
+                            "line": 12,
+                            "content": "\r"
+                        },
+                        {
+                            "line": 13,
+                            "content": "\t// Remove any of the characters in the array (blacklist).\r"
+                        },
+                        {
+                            "line": 14,
+                            "content": "\t$target = str_replace( array_keys( $substitutions ), $substitutions, $target );\r"
+                        },
+                        {
+                            "line": 15,
+                            "content": "\r"
+                        },
+                        {
+                            "line": 16,
+                            "content": "\t// Determine OS and execute the ping command.\r"
+                        },
+                        {
+                            "line": 17,
+                            "content": "\tif( stristr( php_uname( 's' ), 'Windows NT' ) ) {\r"
+                        },
+                        {
+                            "line": 18,
+                            "content": "\t\t// Windows\r"
+                        },
+                        {
+                            "line": 19,
+                            "content": "\t\t$cmd = shell_exec( 'ping  ' . $target );\r"
+                        },
+                        {
+                            "line": 20,
+                            "content": "\t}\r"
+                        },
+                        {
+                            "line": 21,
+                            "content": "\telse {\r"
+                        },
+                        {
+                            "line": 22,
+                            "content": "\t\t// *nix\r"
+                        },
+                        {
+                            "line": 23,
+                            "content": "\t\t$cmd = shell_exec( 'ping  -c 4 ' . $target );\r"
+                        },
+                        {
+                            "line": 24,
+                            "content": "\t}\r"
+                        },
+                        {
+                            "line": 25,
+                            "content": "\r"
+                        },
+                        {
+                            "line": 26,
+                            "content": "\t// Feedback for the end user\r"
+                        },
+                        {
+                            "line": 27,
+                            "content": "\t$html .= \"<pre>{$cmd}</pre>\";\r"
+                        }
+                    ],
+                    "nameHighlight": "",
+                    "line": 19,
+                    "language": "PHP",
+                    "path": "DVWA-master/vulnerabilities/exec/source/medium.php",
+                    "type": "Vulnerability Value Usage",
+                    "order": 1
+                }
+            ],
             "base": {
                 "codeSnippets": [
                     {
                         "code": [
                             {
+                                "line": 17,
+                                "content": "\tif( stristr( php_uname( 's' ), 'Windows NT' ) ) {\r"
+                            },
+                            {
+                                "line": 18,
+                                "content": "\t\t// Windows\r"
+                            },
+                            {
+                                "line": 19,
+                                "content": "\t\t$cmd = shell_exec( 'ping  ' . $target );\r"
+                            },
+                            {
                                 "line": 20,
-                                "content": "\t\tif( stristr( php_uname( 's' ), 'Windows NT' ) ) {\r"
+                                "content": "\t}\r"
                             },
                             {
                                 "line": 21,
-                                "content": "\t\t\t// Windows\r"
-                            },
-                            {
-                                "line": 22,
-                                "content": "\t\t\t$cmd = shell_exec( 'ping  ' . $target );\r"
-                            },
-                            {
-                                "line": 23,
-                                "content": "\t\t}\r"
-                            },
-                            {
-                                "line": 24,
-                                "content": "\t\telse {\r"
+                                "content": "\telse {\r"
                             }
                         ],
-                        "id": "966ff2f4-8ab4-48f6-9f9a-65efd09bf88f",
-                        "vulnerableStartLine": 22,
-                        "vulnerableEndLine": 22,
-                        "startLine": 20,
-                        "endLine": 24,
+                        "id": "27bbc8f0-3e81-4554-b6cc-ad0a32fc28ea",
+                        "vulnerableStartLine": 19,
+                        "vulnerableEndLine": 19,
+                        "startLine": 17,
+                        "endLine": 21,
                         "language": "PHP",
                         "fixAnalysis": "",
                         "fixAnalysisDescription": ""
                     }
                 ],
-                "dataflow": [
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/index.php",
-                        "category": "ENTRY_POINT",
-                        "ligne": 39,
-                        "explication": "Formulaire HTML exposé via interface web DVWA pour saisie d'adresse IP",
-                        "variables": "ip (input field)"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/source/impossible.php",
-                        "category": "SOURCE",
-                        "ligne": 8,
-                        "explication": "Récupération de l'input utilisateur via $_REQUEST",
-                        "variables": "$target = $_REQUEST['ip']"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/source/impossible.php",
-                        "category": "SANITIZATION",
-                        "ligne": 9,
-                        "explication": "Application de stripslashes pour enlever les backslashes",
-                        "variables": "$target = stripslashes($target)"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/source/impossible.php",
-                        "category": "VALIDATION",
-                        "ligne": 12,
-                        "explication": "Division de l'IP en octets pour validation",
-                        "variables": "$octet = explode('.', $target)"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/source/impossible.php",
-                        "category": "STRICT_VALIDATION",
-                        "ligne": 15,
-                        "explication": "Validation stricte: chaque octet doit être numérique et exactement 4 octets",
-                        "variables": "is_numeric() sur chaque $octet[0-3]"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/source/impossible.php",
-                        "category": "RECONSTRUCTION",
-                        "ligne": 17,
-                        "explication": "Reconstruction de l'IP uniquement avec des valeurs validées numériques",
-                        "variables": "$target = $octet[0] . '.' . $octet[1] . '.' . $octet[2] . '.' . $octet[3]"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/source/impossible.php",
-                        "category": "SINK",
-                        "ligne": 22,
-                        "explication": "Exécution shell avec variable validée contenant uniquement des chiffres et points",
-                        "variables": "$target dans shell_exec()"
-                    }
-                ],
-                "vulnerability_truth": {
-                    "statut": "FP",
-                    "explication": "Cette vulnérabilité est un faux positif. Bien que le scanner détecte une concaténation directe dans shell_exec(), le code implémente une validation stricte qui divise l'adresse IP en 4 octets et vérifie que chaque octet est numérique avec is_numeric(). Cette validation empêche totalement l'injection de commandes shell car seuls des caractères numériques et des points peuvent être présents dans la variable $target finale. L'injection de caractères spéciaux comme ';', '&', '|' ou '`' est impossible."
-                },
-                "id": "1ef7e3ff-9022-418c-ada8-3283b726b599",
+                "id": "200eaaf7-1d51-4eac-b753-1f7dffdffc8b",
                 "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
-                "createdAt": "2025-07-31T11:00:15.000Z",
-                "updateAt": "2025-07-31T11:00:15.000Z",
+                "createdAt": "2025-07-31T11:00:16.000Z",
+                "updateAt": "2025-07-31T11:00:16.000Z",
                 "timeToFix": "",
                 "currentState": "to_verify",
                 "currentSeverity": "CRITICAL",
                 "currentPriority": "critical_urgent",
                 "contextualExplanation": "",
                 "language": "PHP",
-                "path": "DVWA-master/vulnerabilities/exec/source/impossible.php",
-                "vulnerableStartLine": 22,
-                "vulnerableEndLine": 22,
-                "vulnerability": {
-                    "cwe": [
-                        "CWE-78"
-                    ],
-                    "owaspTop10": [
-                        "A03:2021 - Injection"
-                    ],
-                    "cweArray": [
-                        "CWE-78"
-                    ],
-                    "references": [
-                        {
-                            "id": "1f948257-c3c7-4b1f-bc4c-042193eac305",
-                            "name": "OWASP Top 10 A03:2021 - Injection",
-                            "url": "https://owasp.org/Top10/A03_2021-Injection"
-                        }
-                    ],
-                    "codeExamples": [
-                        {
-                            "filename": "tainted-exec.php",
-                            "content": "<?php\n\n$userinput = $_GET['userinput'];\n\n// ruleid: tainted-exec\nsystem(\"ls $userinput\");\n\n$escaped = escapeshellarg($userinput);\n// ok: tainted-exec\nsystem(\"ls $escaped\");\n\n$descriptors = [[\"pipe\", \"r\"], [\"pipe\", \"w\"], [\"pipe\", \"w\"]];\n$pipes = [];\n\n// ruleid: tainted-exec\n$p = proc_open(\"ls $userinput\", $descriptors, $pipes);\necho stream_get_contents($pipes[1]);\n\n// ok: tainted-exec\n$p = proc_open([\"ls\", $userinput], $descriptors, $pipes);\necho stream_get_contents($pipes[1]);\n"
-                        }
-                    ],
-                    "id": "286cf5ce-2e9b-4cb8-b85f-79be538026f9",
-                    "name": "Shell Command Injection",
-                    "shortDescription": "Unsanitized user input passed to PHP shell execution functions allows arbitrary command execution.",
-                    "description": "This vulnerability occurs when **user input** is concatenated directly into a shell command passed to functions like `system()` or `proc_open()`. An attacker can inject arbitrary shell operators or commands (for example, `; rm -rf /`), resulting in **remote code execution** with the privileges of the web server. The flaw stems from lack of **input validation** and **command argument separation**, allowing untrusted data to alter the intended command structure. Successful exploitation can compromise system confidentiality, integrity, and availability, enabling data exfiltration, file manipulation, or service disruption.",
-                    "howToPrevent": "To prevent shell command injection:\r\n\r\n* **Validate and sanitize input**: Enforce a whitelist of allowed characters or patterns.\r\n* **Escape shell arguments**: Use `escapeshellarg()` or `escapeshellcmd()` to quote or escape user input.\r\n* **Use array-based APIs**: For `proc_open()` and `exec()`, pass command and arguments as an array to avoid shell interpretation.\r\n* **Avoid shell invocation**: When possible, use native functions (e.g., `scandir()` for directory listings) instead of shell commands.\r\n\r\nExample:\r\n```php\r\n$userinput = $_GET['userinput'];\r\n$safeArg = escapeshellarg($userinput);\r\n// Safe: argument is quoted\r\nsystem(\"ls {$safeArg}\");\r\n\r\n// Array form for proc_open\r\nproc_open([\"ls\", $userinput], $descriptors, $pipes);\r\n```",
-                    "severity": "CRITICAL",
-                    "language": "PHP",
-                    "vulnerabilityType": "sast",
-                    "cvss3": {
-                        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-                        "baseScore": "9.8"
-                    },
-                    "_cvss3": "cvss3",
-                    "sourceMetadata": {
-                        "subcategory": [
-                            "vuln"
-                        ],
-                        "technology": [
-                            "php"
-                        ],
-                        "languages": [
-                            "PHP"
-                        ],
-                        "category": "security",
-                        "confidence": "MEDIUM",
-                        "impact": "HIGH",
-                        "likelihood": "MEDIUM"
-                    },
-                    "_sourceMetadata": "sourceMetadata"
-                },
-                "historyItems": {
-                    "items": []
-                },
-                "vulnerabilityType": "sast"
-            }
-        },
-        "vulnerability": "sast"
-    },
-    {
-        "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
-        "vulnerabilityId": "857569f9-1af6-4a8a-96ad-c5642a30a9b4",
-        "sast": {
-            "base": {
-                "codeSnippets": [
-                    {
-                        "code": [
-                            {
-                                "line": 48,
-                                "content": "\tprivate function executeSystemCommand($command) {\r"
-                            },
-                            {
-                                "line": 49,
-                                "content": "\t\treturn shell_exec($command);\r"
-                            },
-                            {
-                                "line": 50,
-                                "content": "\t}\r"
-                            }
-                        ],
-                        "id": "netdiag-exec-001",
-                        "vulnerableStartLine": 49,
-                        "vulnerableEndLine": 49,
-                        "startLine": 48,
-                        "endLine": 50,
-                        "language": "PHP",
-                        "fixAnalysis": "",
-                        "fixAnalysisDescription": ""
-                    }
-                ],
-                "dataflow": [
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/netdiag/index.php",
-                        "category": "ENTRY_POINT",
-                        "ligne": 41,
-                        "explication": "Formulaire HTML exposé via interface web DVWA pour diagnostic réseau",
-                        "variables": "host (input field)"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/netdiag/source/low.php",
-                        "category": "SOURCE",
-                        "ligne": 8,
-                        "explication": "Récupération de l'input utilisateur via $_POST",
-                        "variables": "'host' => $_POST['host']"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/netdiag/includes/request_handler.php",
-                        "category": "PROPAGATION",
-                        "ligne": 15,
-                        "explication": "Transmission vers processNetworkRequest",
-                        "variables": "$request_data['host']"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/netdiag/includes/request_handler.php",
-                        "category": "METADATA_INJECTION",
-                        "ligne": 27,
-                        "explication": "Extraction discrète de métadonnées client incluant HTTP_X_ADMIN_PARAMS",
-                        "variables": "$_SERVER['HTTP_USER_AGENT'], $_SERVER['HTTP_X_ADMIN_PARAMS']"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/netdiag/includes/diagnostic_manager.php",
-                        "category": "CONDITION_CHECK",
-                        "ligne": 35,
-                        "explication": "Vérification User-Agent contenant 'Admin-Tool' pour activation mode admin",
-                        "variables": "strpos($client_data['user_agent'], 'Admin-Tool')"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/netdiag/includes/diagnostic_manager.php",
-                        "category": "HIDDEN_INJECTION",
-                        "ligne": 42,
-                        "explication": "Extraction de paramètres admin depuis header HTTP_X_ADMIN_PARAMS",
-                        "variables": "$_SERVER['HTTP_X_ADMIN_PARAMS']"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/netdiag/includes/command_executor.php",
-                        "category": "COMMAND_BUILD",
-                        "ligne": 35,
-                        "explication": "Construction de commande avec concaténation des paramètres admin non validés",
-                        "variables": "$command . ' ' . $admin_params"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/netdiag/includes/command_executor.php",
-                        "category": "SINK",
-                        "ligne": 49,
-                        "explication": "Exécution shell de la commande avec paramètres injectés",
-                        "variables": "$command dans shell_exec()"
-                    }
-                ],
-                "vulnerability_truth": {
-                    "statut": "TP",
-                    "explication": "Cette vulnérabilité est un vrai positif avec un dataflow complexe et discret. L'injection se fait via le header HTTP 'HTTP_X_ADMIN_PARAMS' lorsque le User-Agent contient 'Admin-Tool'. La donnée malveillante transite par 5 fichiers avant d'atteindre shell_exec(). La vulnérabilité est accessible en envoyant une requête avec : User-Agent: Admin-Tool et X-Admin-Params: ; malicious_command. Le flux complexe rend cette injection difficile à détecter car elle ne passe pas par les paramètres POST classiques mais par des headers HTTP spécifiques."
-                },
-                "id": "857569f9-1af6-4a8a-96ad-c5642a30a9b4",
-                "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
-                "createdAt": "2025-07-31T11:00:15.000Z",
-                "updateAt": "2025-07-31T11:00:15.000Z",
-                "timeToFix": "",
-                "currentState": "to_verify",
-                "currentSeverity": "CRITICAL",
-                "currentPriority": "critical_urgent",
-                "contextualExplanation": "",
-                "language": "PHP",
-                "path": "DVWA-master/vulnerabilities/netdiag/includes/command_executor.php",
-                "vulnerableStartLine": 49,
-                "vulnerableEndLine": 49,
+                "path": "DVWA-master/vulnerabilities/exec/source/medium.php",
+                "vulnerableStartLine": 19,
+                "vulnerableEndLine": 19,
                 "vulnerability": {
                     "cwe": [
                         "CWE-78"
