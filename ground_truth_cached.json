@@ -950,5 +950,282 @@
             }
         },
         "vulnerability": "sast"
+    },
+    {
+        "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
+        "vulnerabilityId": "36e05767-8cc9-49a7-97b5-209ff2cb5301",
+        "sast": {
+            "base": {
+                "codeSnippets": [
+                    {
+                        "code": [
+                            {
+                                "line": 18,
+                                "content": "\tob_start();\r"
+                            },
+                            {
+                                "line": 19,
+                                "content": "\tif ($locale == 'en') {\r"
+                            },
+                            {
+                                "line": 20,
+                                "content": "\t\teval( '?>' . file_get_contents( DVWA_WEB_PAGE_TO_ROOT . \"vulnerabilities/{$id}/help/help.php\" ) . '<?php ' );\r"
+                            },
+                            {
+                                "line": 21,
+                                "content": "\t} else {\r"
+                            },
+                            {
+                                "line": 22,
+                                "content": "\t\teval( '?>' . file_get_contents( DVWA_WEB_PAGE_TO_ROOT . \"vulnerabilities/{$id}/help/help.{$locale}.php\" ) . '<?php ' );\r"
+                            }
+                        ],
+                        "id": "e0d396e7-6237-4fbc-90ce-02b10d3b0e84",
+                        "vulnerableStartLine": 20,
+                        "vulnerableEndLine": 20,
+                        "startLine": 18,
+                        "endLine": 22,
+                        "language": "PHP",
+                        "fixAnalysis": "",
+                        "fixAnalysisDescription": ""
+                    }
+                ],
+                "id": "36e05767-8cc9-49a7-97b5-209ff2cb5301",
+                "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
+                "createdAt": "2025-07-31T11:00:17.000Z",
+                "updateAt": "2025-07-31T11:00:17.000Z",
+                "timeToFix": "",
+                "currentState": "to_verify",
+                "currentSeverity": "CRITICAL",
+                "currentPriority": "critical_urgent",
+                "contextualExplanation": "",
+                "language": "PHP",
+                "path": "DVWA-master/vulnerabilities/view_help.php",
+                "vulnerableStartLine": 20,
+                "vulnerableEndLine": 20,
+                "vulnerability": {
+                    "cwe": [
+                        "CWE-78"
+                    ],
+                    "owaspTop10": [
+                        "A01:2017 - Injection",
+                        "A03:2021 - Injection"
+                    ],
+                    "cweArray": [
+                        "CWE-78"
+                    ],
+                    "references": [
+                        {
+                            "id": "cdc0d86f-ebe9-4aef-9b7e-a0ceea185ddf",
+                            "name": "phpcs-security-audit NoEvalsSniff",
+                            "url": "https://github.com/FloeDesignTechnologies/phpcs-security-audit/blob/master/Security/Sniffs/BadFunctions/NoEvalsSniff.php"
+                        },
+                        {
+                            "id": "dbdbbb03-eb25-4113-9109-59b0049703a6",
+                            "name": "PHP eval() Manual",
+                            "url": "https://www.php.net/manual/en/function.eval"
+                        }
+                    ],
+                    "codeExamples": [
+                        {
+                            "filename": "eval-use.php",
+                            "content": "<?php\n\n// ruleid: eval-use\neval($user_input);\n\n// ok: eval-use\neval('echo \"OK\"');\n"
+                        }
+                    ],
+                    "id": "a1c34d08-1b1a-4a76-92c4-9d316a14f698",
+                    "name": "Unsafe eval() Usage",
+                    "shortDescription": "Use of eval() with non-constant input allows arbitrary PHP code execution.",
+                    "description": "In the provided code, **eval()** is invoked with a dynamic, non-constant argument (`$user_input`). The **eval()** function interprets the string as PHP code at runtime. When attacker-controlled input reaches **eval()** without validation, it enables **arbitrary code execution**. This can lead to execution of malicious functions, data exfiltration, modification of files, or process termination. Since **eval()** runs in the same context as the application, the attacker can leverage existing permissions and environment, compromising confidentiality, integrity, and availability.",
+                    "howToPrevent": "1. **Eliminate eval()**: Remove any use of `eval()` and implement logic directly in the application code.\r\n2. **Use safe alternatives**: For dynamic function calls use `call_user_func()` or specialized parsers.\r\n3. **Input validation**: Whitelist allowed values and reject or escape unexpected input.\r\n4. **Principle of least privilege**: Run PHP processes with minimal file and system permissions.",
+                    "severity": "CRITICAL",
+                    "language": "PHP",
+                    "vulnerabilityType": "sast",
+                    "cvss3": {
+                        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                        "baseScore": "9.8"
+                    },
+                    "_cvss3": "cvss3",
+                    "sourceMetadata": {
+                        "subcategory": [
+                            "audit"
+                        ],
+                        "technology": [
+                            "php"
+                        ],
+                        "languages": [
+                            "PHP"
+                        ],
+                        "category": "security",
+                        "confidence": "LOW",
+                        "impact": "HIGH",
+                        "likelihood": "LOW"
+                    },
+                    "_sourceMetadata": "sourceMetadata"
+                },
+                "historyItems": {
+                    "items": []
+                },
+                "vulnerabilityType": "sast"
+            }
+        },
+        "vulnerability": "sast",
+        "dataflow": [
+            {
+                "file": "vulnerabilities/view_help.php",
+                "category": "SOURCE",
+                "ligne": 14,
+                "explication": "Input utilisateur récupéré depuis $_GET['id'] sans validation",
+                "variables": "$_GET['id']"
+            },
+            {
+                "file": "vulnerabilities/view_help.php",
+                "category": "SOURCE",
+                "ligne": 16,
+                "explication": "Input utilisateur récupéré depuis $_GET['locale'] sans validation",
+                "variables": "$_GET['locale']"
+            },
+            {
+                "file": "vulnerabilities/view_help.php",
+                "category": "PROPAGATION",
+                "ligne": 14,
+                "explication": "La variable $_GET['id'] est assignée à $id",
+                "variables": "$id"
+            },
+            {
+                "file": "vulnerabilities/view_help.php",
+                "category": "PROPAGATION",
+                "ligne": 16,
+                "explication": "La variable $_GET['locale'] est assignée à $locale",
+                "variables": "$locale"
+            },
+            {
+                "file": "vulnerabilities/view_help.php",
+                "category": "TRANSFORMATION",
+                "ligne": 20,
+                "explication": "Les variables $id et $locale sont utilisées pour construire le chemin du fichier dans file_get_contents()",
+                "variables": "$id, $locale"
+            },
+            {
+                "file": "vulnerabilities/view_help.php",
+                "category": "SINK",
+                "ligne": 20,
+                "explication": "Le contenu du fichier est directement passé à eval() permettant l'exécution de code arbitraire",
+                "variables": "file_get_contents()"
+            }
+        ],
+        "vulnerability_truth": {
+            "statut": "TP",
+            "explication": "Cette vulnérabilité est un VRAI POSITIF. Les paramètres $_GET['id'] et $_GET['locale'] sont directement utilisés pour construire un chemin de fichier sans aucune validation. Le contenu de ce fichier est ensuite exécuté via eval(). Un attaquant peut exploiter cette faille en utilisant des techniques de path traversal (ex: ../../../etc/passwd) ou en injectant du code PHP malveillant. Cette fonction est accessible depuis tous les modules DVWA via le bouton 'View Help' présent sur chaque page de vulnérabilité."
+        }
+    },
+    {
+        "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
+        "vulnerabilityId": "68a3bb76-fb8f-496d-ba5f-a8974586f5c4",
+        "sast": {
+            "base": {
+                "codeSnippets": [
+                    {
+                        "code": [
+                            {
+                                "line": 42,
+                                "content": "        eval('?>' . $template_content . '<?php ');"
+                            }
+                        ],
+                        "id": "68a3bb76-fb8f-496d-ba5f-a8974586f5c4",
+                        "vulnerableStartLine": 42,
+                        "vulnerableEndLine": 42,
+                        "startLine": 42,
+                        "endLine": 42,
+                        "language": "PHP",
+                        "fixAnalysis": "",
+                        "fixAnalysisDescription": ""
+                    }
+                ],
+                "id": "68a3bb76-fb8f-496d-ba5f-a8974586f5c4",
+                "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
+                "createdAt": "2025-08-02T12:00:00.000Z",
+                "updateAt": "2025-08-02T12:00:00.000Z",
+                "timeToFix": "",
+                "currentState": "to_verify",
+                "currentSeverity": "CRITICAL",
+                "currentPriority": "critical_urgent",
+                "contextualExplanation": "",
+                "language": "PHP",
+                "path": "vulnerabilities/docviewer/includes/template_engine.php",
+                "vulnerableStartLine": 42,
+                "vulnerableEndLine": 42,
+                "vulnerability": {
+                    "cwe": [
+                        "CWE-78"
+                    ],
+                    "owaspTop10": [
+                        "A01:2017 - Injection",
+                        "A03:2021 - Injection"
+                    ],
+                    "cweArray": [
+                        "CWE-78"
+                    ],
+                    "name": "Unsafe eval() Usage",
+                    "shortDescription": "Use of eval() with non-constant input allows arbitrary PHP code execution.",
+                    "description": "In the provided code, **eval()** is invoked with a dynamic, non-constant argument. The **eval()** function interprets the string as PHP code at runtime. When attacker-controlled input reaches **eval()** without validation, it enables **arbitrary code execution**.",
+                    "severity": "CRITICAL",
+                    "language": "PHP",
+                    "vulnerabilityType": "sast"
+                },
+                "historyItems": {
+                    "items": []
+                },
+                "vulnerabilityType": "sast"
+            }
+        },
+        "vulnerability": "sast",
+        "dataflow": [
+            {
+                "file": "vulnerabilities/docviewer/index.php",
+                "category": "SOURCE",
+                "ligne": 18,
+                "explication": "Input utilisateur récupéré depuis $_POST['doc_section']",
+                "variables": "$_POST['doc_section']"
+            },
+            {
+                "file": "vulnerabilities/docviewer/includes/document_manager.php",
+                "category": "PROPAGATION",
+                "ligne": 18,
+                "explication": "Le paramètre section_name est passé à prepareRequestData",
+                "variables": "$section_name"
+            },
+            {
+                "file": "vulnerabilities/docviewer/includes/path_validator.php",
+                "category": "VALIDATION",
+                "ligne": 9,
+                "explication": "Validation de la requête avec vérification des patterns malveillants",
+                "variables": "$request_data"
+            },
+            {
+                "file": "vulnerabilities/docviewer/includes/content_processor.php",
+                "category": "SANITIZATION",
+                "ligne": 16,
+                "explication": "Sanitisation stricte avec regex supprimant tous les caractères non-alphanumériques",
+                "variables": "$section_name"
+            },
+            {
+                "file": "vulnerabilities/docviewer/includes/template_engine.php",
+                "category": "SECURITY_FILTER",
+                "ligne": 51,
+                "explication": "Filtrage de sécurité supprimant les fonctions dangereuses et le code PHP",
+                "variables": "$template_content"
+            },
+            {
+                "file": "vulnerabilities/docviewer/includes/template_engine.php",
+                "category": "SINK",
+                "ligne": 42,
+                "explication": "Utilisation d'eval() mais avec contenu préalablement filtré et sécurisé",
+                "variables": "$safe_content"
+            }
+        ],
+        "vulnerability_truth": {
+            "statut": "FP",
+            "explication": "Cette vulnérabilité est un FAUX POSITIF. Bien que eval() soit utilisé, plusieurs couches de sécurité empêchent l'exploitation : (1) PathValidator bloque les patterns malveillants (.., /, eval, etc.), (2) ContentProcessor applique une sanitisation stricte avec regex ne gardant que [a-zA-Z0-9_-], (3) SecurityFilter supprime toutes les fonctions dangereuses et balises PHP/script du contenu avant eval(). Le dataflow complexe sur 5 fichiers garantit qu'aucun contenu malveillant ne peut atteindre eval(). La validation realpath() empêche aussi le path traversal."
+        }
     }
 ]

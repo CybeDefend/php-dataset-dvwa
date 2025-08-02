@@ -35,6 +35,9 @@ if (array_key_exists ("id", $_GET) && array_key_exists ("security", $_GET)) {
 		case "sysmon" :
 			$vuln = 'System Monitor';
 			break;
+		case "docviewer" :
+			$vuln = 'Documentation Viewer';
+			break;
 		case "sqli" :
 			$vuln = 'SQL Injection';
 			break;

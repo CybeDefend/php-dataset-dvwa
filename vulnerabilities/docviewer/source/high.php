@@ -1,0 +1,3 @@
+<?php
+// High security level
+?>
