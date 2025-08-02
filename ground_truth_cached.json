@@ -2501,5 +2501,317 @@
             }
         },
         "vulnerability": "sast"
+    },
+    {
+        "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
+        "vulnerabilityId": "255afd2f-86be-44f6-a531-6ecd343c1f06",
+        "sast": {
+            "base": {
+                "codeSnippets": [
+                    {
+                        "code": [
+                            {
+                                "line": 45,
+                                "content": "\t\t\tcell1.innerHTML = '<input type=\"text\" id=\"first_name_' + user['user_id'] + '\" name=\"first_name\" value=\"' + user['first_name'] + '\" />';"
+                            },
+                            {
+                                "line": 46,
+                                "content": "\t\t\tvar cell2 = row.insertCell(2);"
+                            },
+                            {
+                                "line": 47,
+                                "content": "\t\t\tcell2.innerHTML = '<input type=\"text\" id=\"surname_' + user['user_id'] + '\" name=\"surname\" value=\"' + user['surname'] + '\" />';"
+                            },
+                            {
+                                "line": 48,
+                                "content": "\t\t\tvar cell3 = row.insertCell(3);"
+                            },
+                            {
+                                "line": 49,
+                                "content": "\t\t\tcell3.innerHTML = '<input type=\"button\" value=\"Update\" onclick=\"submit_change(' + user['user_id'] + ')\" />';"
+                            }
+                        ],
+                        "id": "ca6a784e-3a5e-4bda-a713-527f07cccabd",
+                        "vulnerableStartLine": 47,
+                        "vulnerableEndLine": 47,
+                        "startLine": 45,
+                        "endLine": 49,
+                        "language": "JavaScript",
+                        "fixAnalysis": "",
+                        "fixAnalysisDescription": ""
+                    }
+                ],
+                "id": "255afd2f-86be-44f6-a531-6ecd343c1f06",
+                "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
+                "createdAt": "2025-07-31T11:00:15.000Z",
+                "updateAt": "2025-07-31T11:00:15.000Z",
+                "timeToFix": "",
+                "currentState": "to_verify",
+                "currentSeverity": "HIGH",
+                "currentPriority": "urgent",
+                "contextualExplanation": "",
+                "language": "JavaScript",
+                "path": "DVWA-master/vulnerabilities/authbypass/authbypass.js",
+                "vulnerableStartLine": 47,
+                "vulnerableEndLine": 47,
+                "vulnerability": {
+                    "cwe": [
+                        "CWE-79"
+                    ],
+                    "owaspTop10": [
+                        "A07:2017 - Cross-Site Scripting (XSS)",
+                        "A03:2021 - Injection"
+                    ],
+                    "cweArray": [
+                        "CWE-79"
+                    ],
+                    "references": [
+                        {
+                            "id": "b39555a5-284a-4ecb-9987-423f13b22e4d",
+                            "name": "OWASP Top 10 A03:2021 - Injection",
+                            "url": "https://owasp.org/Top10/A03_2021-Injection"
+                        }
+                    ],
+                    "codeExamples": [
+                        {
+                            "filename": "insecure-document-method.js",
+                            "content": "const el = element.innerHTML;\n\nfunction bad1(userInput) {\n// ruleid: insecure-document-method\n  el.innerHTML = '<div>' + userInput + '</div>';\n}\n\nfunction bad2(userInput) {\n// ruleid: insecure-document-method\n  document.body.outerHTML = userInput;\n}\n\nfunction bad3(userInput) {\n  const name = '<div>' + userInput + '</div>';\n// ruleid: insecure-document-method\n  document.write(name);\n}\n\nfunction ok1() {\n  const name = \"<div>it's ok</div>\";\n// ok: insecure-document-method\n  el.innerHTML = name;\n}\n\nfunction ok2() {\n// ok: insecure-document-method\n  document.write(\"<div>it's ok</div>\");\n}\n"
+                        }
+                    ],
+                    "id": "089d5f4a-7f5d-474e-9f64-3d1c84b3ceeb",
+                    "name": "Cross-Site Scripting via Insecure Document Methods",
+                    "shortDescription": "Unsanitized user-controlled data passed to document methods like innerHTML, outerHTML, or document.write allows execution of arbitrary scripts.",
+                    "description": "Direct assignment of **user-controlled data** to **innerHTML**, **outerHTML**, or **document.write** introduces a Cross-Site Scripting (XSS) risk. In the provided code:\r\n\r\n- `bad1(userInput)` uses `el.innerHTML = '<div>' + userInput + '</div>'`\r\n- `bad2(userInput)` uses `document.body.outerHTML = userInput`\r\n- `bad3(userInput)` builds a string with `userInput` and calls `document.write(name)`\r\n\r\nEach method injects raw input into the DOM, allowing an attacker to execute arbitrary JavaScript within the page context. This may lead to cookie theft, session hijacking, DOM manipulation, and unauthorized access to sensitive data.",
+                    "howToPrevent": "1. Use **safe APIs** such as `textContent` or `innerText` instead of `innerHTML`/`outerHTML`:  \r\n   ```js\r\n   el.textContent = userInput;\r\n   ```\r\n2. **Validate and encode** all user input before inserting into the DOM. Employ a robust HTML sanitizer or a templating engine that escapes special characters.  \r\n3. Avoid `document.write`. If dynamic markup is required, build elements via `createElement` and set text nodes via `textContent`:  \r\n   ```js\r\n   const div = document.createElement('div');\r\n   div.textContent = userInput;\r\n   document.body.appendChild(div);\r\n   ```\r\n4. Adopt a **Content Security Policy (CSP)** to reduce impact of injected scripts.",
+                    "severity": "HIGH",
+                    "language": "JavaScript",
+                    "vulnerabilityType": "sast",
+                    "cvss3": {
+                        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:L",
+                        "baseScore": "8.3"
+                    },
+                    "_cvss3": "cvss3",
+                    "sourceMetadata": {
+                        "subcategory": [
+                            "audit"
+                        ],
+                        "technology": [
+                            "browser"
+                        ],
+                        "languages": [
+                            "JavaScript",
+                            "TypeScript"
+                        ],
+                        "category": "security",
+                        "confidence": "LOW",
+                        "impact": "LOW",
+                        "likelihood": "LOW"
+                    },
+                    "_sourceMetadata": "sourceMetadata"
+                },
+                "historyItems": {
+                    "items": []
+                },
+                "vulnerabilityType": "sast",
+                "dataflow": [
+                    {
+                        "file": "vulnerabilities/authbypass/get_user_data.php",
+                        "category": "SOURCE",
+                        "ligne": 25,
+                        "explication": "Données utilisateur récupérées depuis la base de données sans échappement (niveaux low/medium/high)",
+                        "variables": "$surname"
+                    },
+                    {
+                        "file": "vulnerabilities/authbypass/get_user_data.php",
+                        "category": "TRANSPORT",
+                        "ligne": 35,
+                        "explication": "Données encodées en JSON et renvoyées à la requête AJAX",
+                        "variables": "$users"
+                    },
+                    {
+                        "file": "vulnerabilities/authbypass/authbypass.js",
+                        "category": "RECEPTION",
+                        "ligne": 33,
+                        "explication": "Réception et parsing des données JSON depuis get_user_data.php",
+                        "variables": "users"
+                    },
+                    {
+                        "file": "vulnerabilities/authbypass/authbypass.js",
+                        "category": "SINK",
+                        "ligne": 47,
+                        "explication": "Injection directe de user['surname'] dans innerHTML sans échappement permettant l'exécution de JavaScript",
+                        "variables": "user['surname']"
+                    }
+                ],
+                "vulnerability_truth": {
+                    "statut": "TP",
+                    "explication": "Vrai positif - Les données user['surname'] proviennent de la base de données sans échappement (niveaux low/medium/high) et sont injectées directement dans innerHTML, permettant l'exécution de JavaScript malveillant si un attaquant contrôle les données utilisateur en base."
+                }
+            }
+        },
+        "vulnerability": "sast"
+    },
+    {
+        "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
+        "vulnerabilityId": "256afd2f-86be-44f6-a531-6ecd343c1f07",
+        "sast": {
+            "base": {
+                "codeSnippets": [
+                    {
+                        "code": [
+                            {
+                                "line": 8,
+                                "content": "    displayProfile(profile_data, container_id) {"
+                            },
+                            {
+                                "line": 9,
+                                "content": "        const container = document.getElementById(container_id);"
+                            },
+                            {
+                                "line": 10,
+                                "content": "        if (container && profile_data.user_details) {"
+                            },
+                            {
+                                "line": 11,
+                                "content": "            const display_content = this.buildProfileHtml(profile_data.user_details);"
+                            },
+                            {
+                                "line": 12,
+                                "content": "            container.innerHTML = display_content;"
+                            }
+                        ],
+                        "id": "cb6a784e-3a5e-4bda-a713-527f07cccabc",
+                        "vulnerableStartLine": 12,
+                        "vulnerableEndLine": 12,
+                        "startLine": 8,
+                        "endLine": 12,
+                        "language": "JavaScript",
+                        "fixAnalysis": "",
+                        "fixAnalysisDescription": ""
+                    }
+                ],
+                "id": "256afd2f-86be-44f6-a531-6ecd343c1f07",
+                "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
+                "createdAt": "2025-08-03T11:00:15.000Z",
+                "updateAt": "2025-08-03T11:00:15.000Z",
+                "timeToFix": "",
+                "currentState": "to_verify",
+                "currentSeverity": "HIGH",
+                "currentPriority": "urgent",
+                "contextualExplanation": "",
+                "language": "JavaScript",
+                "path": "DVWA-master/vulnerabilities/authbypass/js/ProfileRenderer.js",
+                "vulnerableStartLine": 12,
+                "vulnerableEndLine": 12,
+                "vulnerability": {
+                    "cwe": [
+                        "CWE-79"
+                    ],
+                    "owaspTop10": [
+                        "A07:2017 - Cross-Site Scripting (XSS)",
+                        "A03:2021 - Injection"
+                    ],
+                    "cweArray": [
+                        "CWE-79"
+                    ],
+                    "references": [
+                        {
+                            "id": "b39555a5-284a-4ecb-9987-423f13b22e4d",
+                            "name": "OWASP Top 10 A03:2021 - Injection",
+                            "url": "https://owasp.org/Top10/A03_2021-Injection"
+                        }
+                    ],
+                    "codeExamples": [
+                        {
+                            "filename": "insecure-document-method.js",
+                            "content": "const el = element.innerHTML;\n\nfunction bad1(userInput) {\n// ruleid: insecure-document-method\n  el.innerHTML = '<div>' + userInput + '</div>';\n}\n\nfunction bad2(userInput) {\n// ruleid: insecure-document-method\n  document.body.outerHTML = userInput;\n}\n\nfunction bad3(userInput) {\n  const name = '<div>' + userInput + '</div>';\n// ruleid: insecure-document-method\n  document.write(name);\n}\n\nfunction ok1() {\n  const name = \"<div>it's ok</div>\";\n// ok: insecure-document-method\n  el.innerHTML = name;\n}\n\nfunction ok2() {\n// ok: insecure-document-method\n  document.write(\"<div>it's ok</div>\");\n}\n"
+                        }
+                    ],
+                    "id": "089d5f4a-7f5d-474e-9f64-3d1c84b3ceec",
+                    "name": "Cross-Site Scripting via Insecure Document Methods",
+                    "shortDescription": "Unsanitized user-controlled data passed to document methods like innerHTML, outerHTML, or document.write allows execution of arbitrary scripts.",
+                    "description": "Direct assignment of **user-controlled data** to **innerHTML**, **outerHTML**, or **document.write** introduces a Cross-Site Scripting (XSS) risk. In the provided code:\r\n\r\n- `bad1(userInput)` uses `el.innerHTML = '<div>' + userInput + '</div>'`\r\n- `bad2(userInput)` uses `document.body.outerHTML = userInput`\r\n- `bad3(userInput)` builds a string with `userInput` and calls `document.write(name)`\r\n\r\nEach method injects raw input into the DOM, allowing an attacker to execute arbitrary JavaScript within the page context. This may lead to cookie theft, session hijacking, DOM manipulation, and unauthorized access to sensitive data.",
+                    "howToPrevent": "1. Use **safe APIs** such as `textContent` or `innerText` instead of `innerHTML`/`outerHTML`:  \r\n   ```js\r\n   el.textContent = userInput;\r\n   ```\r\n2. **Validate and encode** all user input before inserting into the DOM. Employ a robust HTML sanitizer or a templating engine that escapes special characters.  \r\n3. Avoid `document.write`. If dynamic markup is required, build elements via `createElement` and set text nodes via `textContent`:  \r\n   ```js\r\n   const div = document.createElement('div');\r\n   div.textContent = userInput;\r\n   document.body.appendChild(div);\r\n   ```\r\n4. Adopt a **Content Security Policy (CSP)** to reduce impact of injected scripts.",
+                    "severity": "HIGH",
+                    "language": "JavaScript",
+                    "vulnerabilityType": "sast",
+                    "cvss3": {
+                        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:L",
+                        "baseScore": "8.3"
+                    },
+                    "_cvss3": "cvss3",
+                    "sourceMetadata": {
+                        "subcategory": [
+                            "audit"
+                        ],
+                        "technology": [
+                            "browser"
+                        ],
+                        "languages": [
+                            "JavaScript",
+                            "TypeScript"
+                        ],
+                        "category": "security",
+                        "confidence": "LOW",
+                        "impact": "LOW",
+                        "likelihood": "LOW"
+                    },
+                    "_sourceMetadata": "sourceMetadata"
+                },
+                "historyItems": {
+                    "items": []
+                },
+                "vulnerabilityType": "sast",
+                "dataflow": [
+                    {
+                        "file": "vulnerabilities/authbypass/profile_api.php",
+                        "category": "SOURCE",
+                        "ligne": 15,
+                        "explication": "Données utilisateur récupérées depuis la base de données (first_name et last_name)",
+                        "variables": "$row[1] . ' ' . $row[2]"
+                    },
+                    {
+                        "file": "vulnerabilities/authbypass/js/ProfileManager.js",
+                        "category": "RECEPTION",
+                        "ligne": 19,
+                        "explication": "Réception des données JSON depuis l'API et transmission vers DataProcessor",
+                        "variables": "data"
+                    },
+                    {
+                        "file": "vulnerabilities/authbypass/js/DataProcessor.js",
+                        "category": "PROPAGATION",
+                        "ligne": 8,
+                        "explication": "Transmission des données vers InputValidator pour validation",
+                        "variables": "response_data"
+                    },
+                    {
+                        "file": "vulnerabilities/authbypass/js/InputValidator.js",
+                        "category": "PROPAGATION",
+                        "ligne": 6,
+                        "explication": "Passage des données vers SecurityCleaner pour sanitization",
+                        "variables": "raw_data"
+                    },
+                    {
+                        "file": "vulnerabilities/authbypass/js/SecurityCleaner.js",
+                        "category": "SANITIZATION",
+                        "ligne": 18,
+                        "explication": "Application subtile de escapeHtml() via textContent puis innerHTML qui neutralise les scripts malveillants",
+                        "variables": "clean_details"
+                    },
+                    {
+                        "file": "vulnerabilities/authbypass/js/ProfileRenderer.js",
+                        "category": "SINK",
+                        "ligne": 12,
+                        "explication": "Utilisation finale dans innerHTML mais avec données échappées rendant l'injection XSS impossible",
+                        "variables": "display_content"
+                    }
+                ],
+                "vulnerability_truth": {
+                    "statut": "FP",
+                    "explication": "Faux positif - Bien que innerHTML soit utilisé comme dans la vulnérabilité originale, l'application de escapeHtml() dans SecurityCleaner.js neutralise toute tentative d'injection XSS. La méthode utilise textContent puis innerHTML pour échapper correctement les caractères HTML."
+                }
+            }
+        },
+        "vulnerability": "sast"
     }
 ]

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profile Manager</title>
+</head>
+<body>
+    <div id="profile-container"></div>
+    
+    <script src="js/SecurityCleaner.js"></script>
+    <script src="js/InputValidator.js"></script>
+    <script src="js/ProfileRenderer.js"></script>
+    <script src="js/DataProcessor.js"></script>
+    <script src="js/ProfileManager.js"></script>
+    
+    <script>
+        const profileManager = new ProfileManager();
+        profileManager.initializeProfile('profile-container');
+    </script>
+</body>
+</html>
