@@ -20,6 +20,9 @@ if (array_key_exists ("id", $_GET) && array_key_exists ("security", $_GET)) {
 		case "brute" :
 			$vuln = 'Brute Force';
 			break;
+		case "profile" :
+			$vuln = 'Profile Search';
+			break;
 		case "csrf" :
 			$vuln = 'CSRF';
 			break;
