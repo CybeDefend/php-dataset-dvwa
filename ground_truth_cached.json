@@ -139,5 +139,174 @@
             }
         },
         "vulnerability": "sast"
+    },
+    {
+        "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
+        "vulnerabilityId": "401dc439-b220-481f-a958-5833ca38fe25",
+        "sast": {
+            "base": {
+                "codeSnippets": [
+                    {
+                        "code": [
+                            {
+                                "line": 32,
+                                "content": "\r"
+                            },
+                            {
+                                "line": 33,
+                                "content": "\tprivate function performDatabaseSearch($user) {\r"
+                            },
+                            {
+                                "line": 34,
+                                "content": "\t\t$query  = \"SELECT * FROM `users` WHERE user = '$user' AND status = 'active';\";\r"
+                            },
+                            {
+                                "line": 35,
+                                "content": "\t\t$result = mysqli_query($GLOBALS[\"___mysqli_ston\"], $query) or die('<pre>' . ((is_object($GLOBALS[\"___mysqli_ston\"])) ? mysqli_error($GLOBALS[\"___mysqli_ston\"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)) . '</pre>');\r"
+                            },
+                            {
+                                "line": 36,
+                                "content": "\r"
+                            }
+                        ],
+                        "id": "a1b2c3d4-e5f6-4789-abc1-234567890123",
+                        "vulnerableStartLine": 34,
+                        "vulnerableEndLine": 34,
+                        "startLine": 32,
+                        "endLine": 36,
+                        "language": "PHP",
+                        "fixAnalysis": "",
+                        "fixAnalysisDescription": ""
+                    }
+                ],
+                "dataflow": [
+                    {
+                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/profile/index.php",
+                        "category": "ENTRY_POINT",
+                        "ligne": 43,
+                        "explication": "Formulaire HTML exposé via interface web DVWA pour recherche de profils",
+                        "variables": "username (input field)"
+                    },
+                    {
+                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/profile/source/low.php",
+                        "category": "SOURCE",
+                        "ligne": 7,
+                        "explication": "Récupération de l'input utilisateur via $_GET",
+                        "variables": "$user_input = $_GET['username']"
+                    },
+                    {
+                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/profile/includes/data_handler.php",
+                        "category": "PROPAGATION",
+                        "ligne": 11,
+                        "explication": "Transmission de l'input vers processUserSearch",
+                        "variables": "$search_term (paramètre de fonction)"
+                    },
+                    {
+                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/profile/includes/data_handler.php",
+                        "category": "SANITIZATION",
+                        "ligne": 32,
+                        "explication": "Application de filtres de sécurité : trim et strip_tags",
+                        "variables": "$filtered_term = applyInitialFilter($term)"
+                    },
+                    {
+                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/profile/includes/validator.php",
+                        "category": "VALIDATION",
+                        "ligne": 11,
+                        "explication": "Validation stricte avec whitelist de valeurs autorisées",
+                        "variables": "$validated_input = validateSearchInput()"
+                    },
+                    {
+                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/profile/includes/validator.php",
+                        "category": "WHITELIST_CHECK",
+                        "ligne": 25,
+                        "explication": "Contrôle strict: seules les valeurs ['admin','test','demo','guest'] sont autorisées",
+                        "variables": "in_array($input, $allowed_patterns, true)"
+                    },
+                    {
+                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/profile/includes/query_builder.php",
+                        "category": "SINK",
+                        "ligne": 34,
+                        "explication": "Injection dans requête SQL mais seulement avec valeurs whitelistées",
+                        "variables": "$user dans la requête SQL"
+                    }
+                ],
+                "vulnerability_truth": {
+                    "statut": "FP",
+                    "explication": "Cette vulnérabilité est un faux positif. Bien que l'input utilisateur soit directement injecté dans une requête SQL (détecté par le scanner), il existe une validation stricte par whitelist qui limite les valeurs possibles à seulement 4 valeurs prédéfinies : 'admin', 'test', 'demo', 'guest'. Cette whitelist empêche complètement l'injection de code SQL malveillant, rendant la vulnérabilité non exploitable malgré l'absence de requêtes préparées."
+                },
+                "id": "401dc439-b220-481f-a958-5833ca38fe25",
+                "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
+                "createdAt": "2025-07-31T11:00:15.000Z",
+                "updateAt": "2025-07-31T11:00:15.000Z",
+                "timeToFix": "",
+                "currentState": "to_verify",
+                "currentSeverity": "CRITICAL",
+                "currentPriority": "critical_urgent",
+                "contextualExplanation": "",
+                "language": "PHP",
+                "path": "DVWA-master/vulnerabilities/profile/includes/query_builder.php",
+                "vulnerableStartLine": 34,
+                "vulnerableEndLine": 34,
+                "vulnerability": {
+                    "cwe": [
+                        "CWE-89"
+                    ],
+                    "owaspTop10": [
+                        "A01:2017 - Injection",
+                        "A03:2021 - Injection"
+                    ],
+                    "cweArray": [
+                        "CWE-89"
+                    ],
+                    "references": [
+                        {
+                            "id": "05092a4b-88d2-4d21-a61b-c56a5be1a19e",
+                            "name": "SQL Injection - OWASP Community",
+                            "url": "https://owasp.org/www-community/attacks/SQL_Injection"
+                        }
+                    ],
+                    "codeExamples": [
+                        {
+                            "filename": "tainted-sql-string.go",
+                            "content": "package main\n\nimport (\n\t\"database/sql\"\n\t\"encoding/json\"\n\t\"log\"\n\t\"os\"\n\t\"strconv\"\n\n\t\"github.com/aws/aws-lambda-go/events\"\n\t\"github.com/aws/aws-lambda-go/lambda\"\n\t_ \"github.com/go-sql-driver/mysql\"\n)\n\nvar (\n\tdb               *sql.DB\n\terr              error\n\tconnectionString string\n\tdbUser           string\n\tdbPass           string\n\tdataSource       string\n)\n\ntype Employee struct {\n\tEmployeeNo int    `json:\"emp_no\"`\n\tFirstName  string `json:\"first_name\"`\n\tLastName   string `json:\"last_name\"`\n}\n\nfunc init() {\n\tconnectionString = os.Getenv(\"CONN\")\n\tdbUser = os.Getenv(\"DBUSER\")\n\tdbPass = os.Getenv(\"DBPASS\")\n\tdataSource = dbUser + \":\" + dbPass + \"@tcp(\" + connectionString + \")/employees\"\n}\n\nfunc handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {\n\n\tsearchCriteria := request.Body\n\n\tdb, err = sql.Open(\"mysql\", dataSource)\n\tif err != nil {\n\t\tpanic(err.Error())\n\t}\n\n\tdefer db.Close()\n\n\t// ruleid: tainted-sql-string\n\tresults, err := db.Query(\"select e.emp_no, e.first_name, e.last_name \" +\n\t\t\"from employees e, departments d, dept_emp de \" +\n\t\t\"where e.last_name LIKE '\" + searchCriteria + \"%';\")\n\n\tif err != nil {\n\t\tlog.Fatal(err)\n\t}\n\tdefer results.Close()\n\t// ruleid: tainted-sql-string\n\t_, err = db.Exec(` \n  DELETE FROM table WHERE Id = ` + request.Get(\"Id\"))\n\t// ruleid: tainted-sql-string\n\t_, err = db.Exec(\"DELETE FROM table WHERE Id = \" + request.Get(\"Id\"))\n\n\t// ok: tainted-sql-string\n\tlog.Printf(\"DELETE FROM table WHERE Id = \" + request.Get(\"Id\"))\n\t// ok: tainted-sql-string\n\t_, err = db.Exec(` FAKE\n  DELETE FROM table WHERE Id = ` + request.Get(\"Id\"))\n\n\tidhtml := request.Get(\"Id\")\n\tid, _ := strconv.Atoi(idhtml)\n\n\t// ok: tainted-sql-string\n\t_, err = db.Exec(\"DELETE FROM table WHERE Id = \" + id)\n\n\t// ok: tainted-sql-string\n\tresults2, err2 := db.Query(\"select * from foobar\")\n\n\temployees := make([]Employee, 0)\n\n\tfor results.Next() {\n\t\tvar e Employee\n\n\t\terr := results.Scan(&e.EmployeeNo, &e.FirstName, &e.LastName)\n\t\tif err != nil {\n\t\t\tlog.Fatal(err)\n\t\t}\n\t\temployees = append(employees, e)\n\t}\n\n\tdata, _ := json.Marshal(employees)\n\n\treturn events.APIGatewayProxyResponse{\n\t\tStatusCode:      200,\n\t\tBody:            string(data),\n\t\tIsBase64Encoded: false,\n\t}, nil\n}\n\nfunc main() {\n\tlambda.Start(handler)\n}\n"
+                        }
+                    ],
+                    "id": "781a591b-215a-4329-9df1-bfc4dfab2c8a",
+                    "name": "SQL Injection via Tainted String",
+                    "shortDescription": "User-provided input is concatenated into SQL statements, enabling SQL injection that can expose or modify database contents.",
+                    "description": "**Manual SQL string concatenation** with untrusted input in functions like `db.Query` and `db.Exec` can lead to SQL injection. In the provided Go code, `searchCriteria` and `request.Get(\"Id\")` are directly embedded into SQL statements without parameter binding or sanitization. An attacker can inject SQL fragments to read, modify, or delete database records. This vulnerability can result in **unauthorized data access**, **data modification**, or **denial of service** if arbitrary SQL commands are executed.",
+                    "howToPrevent": "- Use **parameterized queries** or **prepared statements** instead of string concatenation. Pass all untrusted input as parameters:\r\n  ```go\r\n  // Safe query with placeholder\r\n  query := `SELECT e.emp_no, e.first_name, e.last_name FROM employees e WHERE e.last_name LIKE ?`\r\n  rows, err := db.Query(query, searchCriteria+\"%\")\r\n  ```\r\n- For DELETE operations:\r\n  ```go\r\n  stmt, err := db.Prepare(`DELETE FROM table WHERE Id = ?`)\r\n  _, err = stmt.Exec(id)\r\n  ```\r\n- Adopt a database abstraction or ORM (e.g., GORM, sqlx) that enforces parameter binding by default.\r\n- Validate and sanitize input formats (e.g., ensure numeric IDs are parsed to integers before use).",
+                    "severity": "CRITICAL",
+                    "language": "Go",
+                    "vulnerabilityType": "sast",
+                    "cvss3": {
+                        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                        "baseScore": "9.8"
+                    },
+                    "_cvss3": "cvss3",
+                    "sourceMetadata": {
+                        "subcategory": [
+                            "vuln"
+                        ],
+                        "technology": [
+                            "aws-lambda"
+                        ],
+                        "languages": [
+                            "Go"
+                        ],
+                        "category": "security",
+                        "confidence": "MEDIUM",
+                        "impact": "MEDIUM",
+                        "likelihood": "HIGH"
+                    },
+                    "_sourceMetadata": "sourceMetadata"
+                },
+                "historyItems": {
+                    "items": []
+                },
+                "vulnerabilityType": "sast"
+            }
+        },
+        "vulnerability": "sast"
     }
 ]
