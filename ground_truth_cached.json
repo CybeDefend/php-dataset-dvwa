@@ -643,5 +643,312 @@
             }
         },
         "vulnerability": "sast"
+    },
+    {
+        "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
+        "vulnerabilityId": "200eaaf7-1d51-4eac-b753-1f7dffdffc8b",
+        "sast": {
+            "base": {
+                "codeSnippets": [
+                    {
+                        "code": [
+                            {
+                                "line": 17,
+                                "content": "\tif( stristr( php_uname( 's' ), 'Windows NT' ) ) {\r"
+                            },
+                            {
+                                "line": 18,
+                                "content": "\t\t// Windows\r"
+                            },
+                            {
+                                "line": 19,
+                                "content": "\t\t$cmd = shell_exec( 'ping  ' . $target );\r"
+                            },
+                            {
+                                "line": 20,
+                                "content": "\t}\r"
+                            },
+                            {
+                                "line": 21,
+                                "content": "\telse {\r"
+                            }
+                        ],
+                        "id": "27bbc8f0-3e81-4554-b6cc-ad0a32fc28ea",
+                        "vulnerableStartLine": 19,
+                        "vulnerableEndLine": 19,
+                        "startLine": 17,
+                        "endLine": 21,
+                        "language": "PHP",
+                        "fixAnalysis": "",
+                        "fixAnalysisDescription": ""
+                    }
+                ],
+                "dataflow": [
+                    {
+                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/index.php",
+                        "category": "ENTRY_POINT",
+                        "ligne": 39,
+                        "explication": "Formulaire HTML exposé via interface web DVWA pour saisie d'adresse IP",
+                        "variables": "ip (input field)"
+                    },
+                    {
+                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/source/medium.php",
+                        "category": "SOURCE",
+                        "ligne": 5,
+                        "explication": "Récupération de l'input utilisateur via $_REQUEST",
+                        "variables": "$target = $_REQUEST['ip']"
+                    },
+                    {
+                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/source/medium.php",
+                        "category": "INSUFFICIENT_SANITIZATION",
+                        "ligne": 14,
+                        "explication": "Application d'une blacklist partielle supprimant seulement '&&' et ';'",
+                        "variables": "$target = str_replace(array_keys($substitutions), $substitutions, $target)"
+                    },
+                    {
+                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/source/medium.php",
+                        "category": "SINK",
+                        "ligne": 19,
+                        "explication": "Exécution shell avec variable insuffisamment sanitisée",
+                        "variables": "$target dans shell_exec()"
+                    }
+                ],
+                "vulnerability_truth": {
+                    "statut": "TP",
+                    "explication": "Cette vulnérabilité est un vrai positif. Bien qu'une blacklist soit appliquée, elle est insuffisante car elle ne filtre que '&&' et ';'. De nombreux autres caractères dangereux restent exploitables : pipe '|', backticks '`', substitution de commande '$()'. Un attaqueur peut facilement contourner cette protection avec des payloads comme '127.0.0.1 | whoami' ou '127.0.0.1 `cat /etc/passwd`', permettant l'exécution de commandes arbitraires."
+                },
+                "id": "200eaaf7-1d51-4eac-b753-1f7dffdffc8b",
+                "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
+                "createdAt": "2025-07-31T11:00:16.000Z",
+                "updateAt": "2025-07-31T11:00:16.000Z",
+                "timeToFix": "",
+                "currentState": "to_verify",
+                "currentSeverity": "CRITICAL",
+                "currentPriority": "critical_urgent",
+                "contextualExplanation": "",
+                "language": "PHP",
+                "path": "DVWA-master/vulnerabilities/exec/source/medium.php",
+                "vulnerableStartLine": 19,
+                "vulnerableEndLine": 19,
+                "vulnerability": {
+                    "cwe": [
+                        "CWE-78"
+                    ],
+                    "owaspTop10": [
+                        "A03:2021 - Injection"
+                    ],
+                    "cweArray": [
+                        "CWE-78"
+                    ],
+                    "references": [
+                        {
+                            "id": "1f948257-c3c7-4b1f-bc4c-042193eac305",
+                            "name": "OWASP Top 10 A03:2021 - Injection",
+                            "url": "https://owasp.org/Top10/A03_2021-Injection"
+                        }
+                    ],
+                    "codeExamples": [
+                        {
+                            "filename": "tainted-exec.php",
+                            "content": "<?php\n\n$userinput = $_GET['userinput'];\n\n// ruleid: tainted-exec\nsystem(\"ls $userinput\");\n\n$escaped = escapeshellarg($userinput);\n// ok: tainted-exec\nsystem(\"ls $escaped\");\n\n$descriptors = [[\"pipe\", \"r\"], [\"pipe\", \"w\"], [\"pipe\", \"w\"]];\n$pipes = [];\n\n// ruleid: tainted-exec\n$p = proc_open(\"ls $userinput\", $descriptors, $pipes);\necho stream_get_contents($pipes[1]);\n\n// ok: tainted-exec\n$p = proc_open([\"ls\", $userinput], $descriptors, $pipes);\necho stream_get_contents($pipes[1]);\n"
+                        }
+                    ],
+                    "id": "286cf5ce-2e9b-4cb8-b85f-79be538026f9",
+                    "name": "Shell Command Injection",
+                    "shortDescription": "Unsanitized user input passed to PHP shell execution functions allows arbitrary command execution.",
+                    "description": "This vulnerability occurs when **user input** is concatenated directly into a shell command passed to functions like `system()` or `proc_open()`. An attacker can inject arbitrary shell operators or commands (for example, `; rm -rf /`), resulting in **remote code execution** with the privileges of the web server. The flaw stems from lack of **input validation** and **command argument separation**, allowing untrusted data to alter the intended command structure. Successful exploitation can compromise system confidentiality, integrity, and availability, enabling data exfiltration, file manipulation, or service disruption.",
+                    "howToPrevent": "To prevent shell command injection:\r\n\r\n* **Validate and sanitize input**: Enforce a whitelist of allowed characters or patterns.\r\n* **Escape shell arguments**: Use `escapeshellarg()` or `escapeshellcmd()` to quote or escape user input.\r\n* **Use array-based APIs**: For `proc_open()` and `exec()`, pass command and arguments as an array to avoid shell interpretation.\r\n* **Avoid shell invocation**: When possible, use native functions (e.g., `scandir()` for directory listings) instead of shell commands.\r\n\r\nExample:\r\n```php\r\n$userinput = $_GET['userinput'];\r\n$safeArg = escapeshellarg($userinput);\r\n// Safe: argument is quoted\r\nsystem(\"ls {$safeArg}\");\r\n\r\n// Array form for proc_open\r\nproc_open([\"ls\", $userinput], $descriptors, $pipes);\r\n```",
+                    "severity": "CRITICAL",
+                    "language": "PHP",
+                    "vulnerabilityType": "sast",
+                    "cvss3": {
+                        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                        "baseScore": "9.8"
+                    },
+                    "_cvss3": "cvss3",
+                    "sourceMetadata": {
+                        "subcategory": [
+                            "vuln"
+                        ],
+                        "technology": [
+                            "php"
+                        ],
+                        "languages": [
+                            "PHP"
+                        ],
+                        "category": "security",
+                        "confidence": "MEDIUM",
+                        "impact": "HIGH",
+                        "likelihood": "MEDIUM"
+                    },
+                    "_sourceMetadata": "sourceMetadata"
+                },
+                "historyItems": {
+                    "items": []
+                },
+                "vulnerabilityType": "sast"
+            }
+        },
+        "vulnerability": "sast"
+    },
+    {
+        "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
+        "vulnerabilityId": "d965adc2-1c86-46cb-9187-3affc57c3b62",
+        "sast": {
+            "base": {
+                "codeSnippets": [
+                    {
+                        "code": [
+                            {
+                                "line": 42,
+                                "content": "\tprivate function runCommand($command) {\r"
+                            },
+                            {
+                                "line": 43,
+                                "content": "\t\treturn shell_exec($command);\r"
+                            },
+                            {
+                                "line": 44,
+                                "content": "\t}\r"
+                            }
+                        ],
+                        "id": "sysmon-exec-001",
+                        "vulnerableStartLine": 43,
+                        "vulnerableEndLine": 43,
+                        "startLine": 42,
+                        "endLine": 44,
+                        "language": "PHP",
+                        "fixAnalysis": "",
+                        "fixAnalysisDescription": ""
+                    }
+                ],
+                "dataflow": [
+                    {
+                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/sysmon/index.php",
+                        "category": "ENTRY_POINT",
+                        "ligne": 43,
+                        "explication": "Formulaire HTML exposé via interface web DVWA pour monitoring système",
+                        "variables": "target_param (input field)"
+                    },
+                    {
+                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/sysmon/source/low.php",
+                        "category": "SOURCE",
+                        "ligne": 9,
+                        "explication": "Récupération de l'input utilisateur via $_POST",
+                        "variables": "'parameter' => $_POST['target_param']"
+                    },
+                    {
+                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/sysmon/includes/monitor_controller.php",
+                        "category": "PROPAGATION",
+                        "ligne": 15,
+                        "explication": "Transmission vers executeMonitorCommand",
+                        "variables": "$request_info['parameter']"
+                    },
+                    {
+                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/sysmon/includes/parameter_processor.php",
+                        "category": "SECURITY_PROCESSING",
+                        "ligne": 30,
+                        "explication": "Appel du filtre de sécurité pour sanitisation",
+                        "variables": "$this->security_filter->sanitizeParameter($parameter)"
+                    },
+                    {
+                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/sysmon/includes/security_filter.php",
+                        "category": "COMPREHENSIVE_SANITIZATION",
+                        "ligne": 23,
+                        "explication": "Application de filtres robustes: suppression caractères dangereux, commandes interdites, substitution",
+                        "variables": "Filtrage via patterns regex et blacklist complète"
+                    },
+                    {
+                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/sysmon/includes/command_dispatcher.php",
+                        "category": "COMMAND_VALIDATION",
+                        "ligne": 17,
+                        "explication": "Validation stricte: seules 4 commandes prédéfinies autorisées",
+                        "variables": "in_array($base_command, $this->safe_commands, true)"
+                    },
+                    {
+                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/sysmon/includes/command_dispatcher.php",
+                        "category": "SINK",
+                        "ligne": 43,
+                        "explication": "Exécution shell avec paramètre entièrement filtré et commande validée",
+                        "variables": "$command dans shell_exec()"
+                    }
+                ],
+                "vulnerability_truth": {
+                    "statut": "FP",
+                    "explication": "Cette vulnérabilité est un faux positif. Bien que le scanner détecte shell_exec(), le code implémente une sécurisation multicouche complexe : 1) Validation stricte des commandes de base (whitelist de 4 commandes), 2) Filtrage complet des paramètres via regex supprimant tous caractères dangereux (;|&`$(){}[]), 3) Blacklist des commandes dangereuses (rm, cat, wget, etc.), 4) Substitution des caractères restants. Cette défense en profondeur empêche totalement l'injection de commandes, rendant la vulnérabilité non exploitable malgré l'usage de shell_exec()."
+                },
+                "id": "d965adc2-1c86-46cb-9187-3affc57c3b62",
+                "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
+                "createdAt": "2025-07-31T11:00:16.000Z",
+                "updateAt": "2025-07-31T11:00:16.000Z",
+                "timeToFix": "",
+                "currentState": "to_verify",
+                "currentSeverity": "CRITICAL",
+                "currentPriority": "critical_urgent",
+                "contextualExplanation": "",
+                "language": "PHP",
+                "path": "DVWA-master/vulnerabilities/sysmon/includes/command_dispatcher.php",
+                "vulnerableStartLine": 43,
+                "vulnerableEndLine": 43,
+                "vulnerability": {
+                    "cwe": [
+                        "CWE-78"
+                    ],
+                    "owaspTop10": [
+                        "A03:2021 - Injection"
+                    ],
+                    "cweArray": [
+                        "CWE-78"
+                    ],
+                    "references": [
+                        {
+                            "id": "1f948257-c3c7-4b1f-bc4c-042193eac305",
+                            "name": "OWASP Top 10 A03:2021 - Injection",
+                            "url": "https://owasp.org/Top10/A03_2021-Injection"
+                        }
+                    ],
+                    "codeExamples": [
+                        {
+                            "filename": "tainted-exec.php",
+                            "content": "<?php\n\n$userinput = $_GET['userinput'];\n\n// ruleid: tainted-exec\nsystem(\"ls $userinput\");\n\n$escaped = escapeshellarg($userinput);\n// ok: tainted-exec\nsystem(\"ls $escaped\");\n\n$descriptors = [[\"pipe\", \"r\"], [\"pipe\", \"w\"], [\"pipe\", \"w\"]];\n$pipes = [];\n\n// ruleid: tainted-exec\n$p = proc_open(\"ls $userinput\", $descriptors, $pipes);\necho stream_get_contents($pipes[1]);\n\n// ok: tainted-exec\n$p = proc_open([\"ls\", $userinput], $descriptors, $pipes);\necho stream_get_contents($pipes[1]);\n"
+                        }
+                    ],
+                    "id": "286cf5ce-2e9b-4cb8-b85f-79be538026f9",
+                    "name": "Shell Command Injection",
+                    "shortDescription": "Unsanitized user input passed to PHP shell execution functions allows arbitrary command execution.",
+                    "description": "This vulnerability occurs when **user input** is concatenated directly into a shell command passed to functions like `system()` or `proc_open()`. An attacker can inject arbitrary shell operators or commands (for example, `; rm -rf /`), resulting in **remote code execution** with the privileges of the web server. The flaw stems from lack of **input validation** and **command argument separation**, allowing untrusted data to alter the intended command structure. Successful exploitation can compromise system confidentiality, integrity, and availability, enabling data exfiltration, file manipulation, or service disruption.",
+                    "howToPrevent": "To prevent shell command injection:\r\n\r\n* **Validate and sanitize input**: Enforce a whitelist of allowed characters or patterns.\r\n* **Escape shell arguments**: Use `escapeshellarg()` or `escapeshellcmd()` to quote or escape user input.\r\n* **Use array-based APIs**: For `proc_open()` and `exec()`, pass command and arguments as an array to avoid shell interpretation.\r\n* **Avoid shell invocation**: When possible, use native functions (e.g., `scandir()` for directory listings) instead of shell commands.\r\n\r\nExample:\r\n```php\r\n$userinput = $_GET['userinput'];\r\n$safeArg = escapeshellarg($userinput);\r\n// Safe: argument is quoted\r\nsystem(\"ls {$safeArg}\");\r\n\r\n// Array form for proc_open\r\nproc_open([\"ls\", $userinput], $descriptors, $pipes);\r\n```",
+                    "severity": "CRITICAL",
+                    "language": "PHP",
+                    "vulnerabilityType": "sast",
+                    "cvss3": {
+                        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                        "baseScore": "9.8"
+                    },
+                    "_cvss3": "cvss3",
+                    "sourceMetadata": {
+                        "subcategory": [
+                            "vuln"
+                        ],
+                        "technology": [
+                            "php"
+                        ],
+                        "languages": [
+                            "PHP"
+                        ],
+                        "category": "security",
+                        "confidence": "MEDIUM",
+                        "impact": "HIGH",
+                        "likelihood": "MEDIUM"
+                    },
+                    "_sourceMetadata": "sourceMetadata"
+                },
+                "historyItems": {
+                    "items": []
+                },
+                "vulnerabilityType": "sast"
+            }
+        },
+        "vulnerability": "sast"
     }
 ]
