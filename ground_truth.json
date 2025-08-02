@@ -1,1 +1,121 @@
-[]
+[
+    {
+        "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
+        "vulnerabilityId": "36e05767-8cc9-49a7-97b5-209ff2cb5301",
+        "sast": {
+            "base": {
+                "codeSnippets": [
+                    {
+                        "code": [
+                            {
+                                "line": 18,
+                                "content": "\tob_start();\r"
+                            },
+                            {
+                                "line": 19,
+                                "content": "\tif ($locale == 'en') {\r"
+                            },
+                            {
+                                "line": 20,
+                                "content": "\t\teval( '?>' . file_get_contents( DVWA_WEB_PAGE_TO_ROOT . \"vulnerabilities/{$id}/help/help.php\" ) . '<?php ' );\r"
+                            },
+                            {
+                                "line": 21,
+                                "content": "\t} else {\r"
+                            },
+                            {
+                                "line": 22,
+                                "content": "\t\teval( '?>' . file_get_contents( DVWA_WEB_PAGE_TO_ROOT . \"vulnerabilities/{$id}/help/help.{$locale}.php\" ) . '<?php ' );\r"
+                            }
+                        ],
+                        "id": "e0d396e7-6237-4fbc-90ce-02b10d3b0e84",
+                        "vulnerableStartLine": 20,
+                        "vulnerableEndLine": 20,
+                        "startLine": 18,
+                        "endLine": 22,
+                        "language": "PHP",
+                        "fixAnalysis": "",
+                        "fixAnalysisDescription": ""
+                    }
+                ],
+                "id": "36e05767-8cc9-49a7-97b5-209ff2cb5301",
+                "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
+                "createdAt": "2025-07-31T11:00:17.000Z",
+                "updateAt": "2025-07-31T11:00:17.000Z",
+                "timeToFix": "",
+                "currentState": "to_verify",
+                "currentSeverity": "CRITICAL",
+                "currentPriority": "critical_urgent",
+                "contextualExplanation": "",
+                "language": "PHP",
+                "path": "DVWA-master/vulnerabilities/view_help.php",
+                "vulnerableStartLine": 20,
+                "vulnerableEndLine": 20,
+                "vulnerability": {
+                    "cwe": [
+                        "CWE-78"
+                    ],
+                    "owaspTop10": [
+                        "A01:2017 - Injection",
+                        "A03:2021 - Injection"
+                    ],
+                    "cweArray": [
+                        "CWE-78"
+                    ],
+                    "references": [
+                        {
+                            "id": "cdc0d86f-ebe9-4aef-9b7e-a0ceea185ddf",
+                            "name": "phpcs-security-audit NoEvalsSniff",
+                            "url": "https://github.com/FloeDesignTechnologies/phpcs-security-audit/blob/master/Security/Sniffs/BadFunctions/NoEvalsSniff.php"
+                        },
+                        {
+                            "id": "dbdbbb03-eb25-4113-9109-59b0049703a6",
+                            "name": "PHP eval() Manual",
+                            "url": "https://www.php.net/manual/en/function.eval"
+                        }
+                    ],
+                    "codeExamples": [
+                        {
+                            "filename": "eval-use.php",
+                            "content": "<?php\n\n// ruleid: eval-use\neval($user_input);\n\n// ok: eval-use\neval('echo \"OK\"');\n"
+                        }
+                    ],
+                    "id": "a1c34d08-1b1a-4a76-92c4-9d316a14f698",
+                    "name": "Unsafe eval() Usage",
+                    "shortDescription": "Use of eval() with non-constant input allows arbitrary PHP code execution.",
+                    "description": "In the provided code, **eval()** is invoked with a dynamic, non-constant argument (`$user_input`). The **eval()** function interprets the string as PHP code at runtime. When attacker-controlled input reaches **eval()** without validation, it enables **arbitrary code execution**. This can lead to execution of malicious functions, data exfiltration, modification of files, or process termination. Since **eval()** runs in the same context as the application, the attacker can leverage existing permissions and environment, compromising confidentiality, integrity, and availability.",
+                    "howToPrevent": "1. **Eliminate eval()**: Remove any use of `eval()` and implement logic directly in the application code.\r\n2. **Use safe alternatives**: For dynamic function calls use `call_user_func()` or specialized parsers.\r\n3. **Input validation**: Whitelist allowed values and reject or escape unexpected input.\r\n4. **Principle of least privilege**: Run PHP processes with minimal file and system permissions.",
+                    "severity": "CRITICAL",
+                    "language": "PHP",
+                    "vulnerabilityType": "sast",
+                    "cvss3": {
+                        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                        "baseScore": "9.8"
+                    },
+                    "_cvss3": "cvss3",
+                    "sourceMetadata": {
+                        "subcategory": [
+                            "audit"
+                        ],
+                        "technology": [
+                            "php"
+                        ],
+                        "languages": [
+                            "PHP"
+                        ],
+                        "category": "security",
+                        "confidence": "LOW",
+                        "impact": "HIGH",
+                        "likelihood": "LOW"
+                    },
+                    "_sourceMetadata": "sourceMetadata"
+                },
+                "historyItems": {
+                    "items": []
+                },
+                "vulnerabilityType": "sast"
+            }
+        },
+        "vulnerability": "sast"
+    }
+]
