@@ -1,90 +1,91 @@
 [
     {
         "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
-        "vulnerabilityId": "20f73eb7-637b-47d2-adf6-1bf86845cb7e",
+        "vulnerabilityId": "255afd2f-86be-44f6-a531-6ecd343c1f06",
         "sast": {
             "base": {
                 "codeSnippets": [
                     {
                         "code": [
                             {
-                                "line": 12,
-                                "content": "\telse {\r"
+                                "line": 45,
+                                "content": "\t\t\tcell1.innerHTML = '<input type=\"text\" id=\"first_name_' + user['user_id'] + '\" name=\"first_name\" value=\"' + user['first_name'] + '\" />';"
                             },
                             {
-                                "line": 13,
-                                "content": "\t\t// *nix\r"
+                                "line": 46,
+                                "content": "\t\t\tvar cell2 = row.insertCell(2);"
                             },
                             {
-                                "line": 14,
-                                "content": "\t\t$cmd = shell_exec( 'ping  -c 4 ' . $target );\r"
+                                "line": 47,
+                                "content": "\t\t\tcell2.innerHTML = '<input type=\"text\" id=\"surname_' + user['user_id'] + '\" name=\"surname\" value=\"' + user['surname'] + '\" />';"
                             },
                             {
-                                "line": 15,
-                                "content": "\t}\r"
+                                "line": 48,
+                                "content": "\t\t\tvar cell3 = row.insertCell(3);"
                             },
                             {
-                                "line": 16,
-                                "content": "\r"
+                                "line": 49,
+                                "content": "\t\t\tcell3.innerHTML = '<input type=\"button\" value=\"Update\" onclick=\"submit_change(' + user['user_id'] + ')\" />';"
                             }
                         ],
-                        "id": "688d2773-55c4-4f46-9cd6-c7fecad01344",
-                        "vulnerableStartLine": 14,
-                        "vulnerableEndLine": 14,
-                        "startLine": 12,
-                        "endLine": 16,
-                        "language": "PHP",
+                        "id": "ca6a784e-3a5e-4bda-a713-527f07cccabd",
+                        "vulnerableStartLine": 47,
+                        "vulnerableEndLine": 47,
+                        "startLine": 45,
+                        "endLine": 49,
+                        "language": "JavaScript",
                         "fixAnalysis": "",
                         "fixAnalysisDescription": ""
                     }
                 ],
-                "id": "20f73eb7-637b-47d2-adf6-1bf86845cb7e",
+                "id": "255afd2f-86be-44f6-a531-6ecd343c1f06",
                 "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
-                "createdAt": "2025-07-31T11:00:16.000Z",
-                "updateAt": "2025-07-31T11:00:16.000Z",
+                "createdAt": "2025-07-31T11:00:15.000Z",
+                "updateAt": "2025-07-31T11:00:15.000Z",
                 "timeToFix": "",
                 "currentState": "to_verify",
                 "currentSeverity": "HIGH",
                 "currentPriority": "urgent",
                 "contextualExplanation": "",
-                "language": "PHP",
-                "path": "DVWA-master/vulnerabilities/exec/source/low.php",
-                "vulnerableStartLine": 14,
-                "vulnerableEndLine": 14,
+                "language": "JavaScript",
+                "path": "DVWA-master/vulnerabilities/authbypass/authbypass.js",
+                "vulnerableStartLine": 47,
+                "vulnerableEndLine": 47,
                 "vulnerability": {
                     "cwe": [
-                        "CWE-94"
+                        "CWE-79"
                     ],
                     "owaspTop10": [
+                        "A07:2017 - Cross-Site Scripting (XSS)",
                         "A03:2021 - Injection"
                     ],
                     "cweArray": [
-                        "CWE-94"
+                        "CWE-79"
                     ],
                     "references": [
                         {
-                            "id": "e2921455-2b30-4392-b4d7-c0be76e6abba",
-                            "name": "PHP CodeSniffer Security Audit - SystemExecFunctionsSniff",
-                            "url": "https://github.com/FloeDesignTechnologies/phpcs-security-audit/blob/master/Security/Sniffs/BadFunctions/SystemExecFunctionsSniff.php"
+                            "id": "b39555a5-284a-4ecb-9987-423f13b22e4d",
+                            "name": "OWASP Top 10 A03:2021 - Injection",
+                            "url": "https://owasp.org/Top10/A03_2021-Injection"
                         }
                     ],
                     "codeExamples": [
                         {
-                            "filename": "exec-use.php",
-                            "content": "<?php\n\n// ruleid: exec-use\nexec($user_input);\n\n// ok: exec-use\nexec('whoami');\n\n// ruleid: exec-use\npassthru($user_input);\n\n// ruleid: exec-use\n$proc = proc_open($cmd, $descriptorspec, $pipes);\n\n// ruleid: exec-use\n$handle = popen($user_input, \"r\");\n\n// ruleid: exec-use\n$output = shell_exec($user_input);\n\n// ruleid: exec-use\n$output = system($user_input, $retval);\n\n// ruleid: exec-use\npcntl_exec($path);\n"
+                            "filename": "insecure-document-method.js",
+                            "content": "const el = element.innerHTML;\n\nfunction bad1(userInput) {\n// ruleid: insecure-document-method\n  el.innerHTML = '<div>' + userInput + '</div>';\n}\n\nfunction bad2(userInput) {\n// ruleid: insecure-document-method\n  document.body.outerHTML = userInput;\n}\n\nfunction bad3(userInput) {\n  const name = '<div>' + userInput + '</div>';\n// ruleid: insecure-document-method\n  document.write(name);\n}\n\nfunction ok1() {\n  const name = \"<div>it's ok</div>\";\n// ok: insecure-document-method\n  el.innerHTML = name;\n}\n\nfunction ok2() {\n// ok: insecure-document-method\n  document.write(\"<div>it's ok</div>\");\n}\n"
                         }
                     ],
-                    "id": "4bf27560-4e42-4953-8904-b9d63c40e892",
-                    "name": "Dynamic Command Execution",
-                    "shortDescription": "Use of non-constant commands in exec and related functions enables OS command injection by untrusted input.",
-                    "description": "This vulnerability arises when **untrusted input** is passed directly to **shell execution functions** such as `exec()`, `passthru()`, `system()`, `shell_exec()`, `popen()`, `proc_open()`, or `pcntl_exec()`. In the provided code example, calls like `exec($user_input)` or `shell_exec($user_input)` allow an attacker to inject arbitrary operating system commands. The root cause is lack of input **validation** and **escaping**, which permits injection of command delimiters, chained commands, or malicious payloads. Successful exploitation can lead to full system compromise, data theft, or denial of service by executing arbitrary commands with the privileges of the application process.",
-                    "howToPrevent": "1. **Validate and sanitize input**: Accept only known-safe characters or patterns. Use strict whitelists rather than blacklists.\r\n2. **Escape shell arguments**: Wrap each dynamic value with functions like `escapeshellarg()` or `escapeshellcmd()` when shell invocation is unavoidable.\r\n3. **Avoid shell invocation**: Prefer native functions or libraries (e.g., PHP’s built-in file or network functions) instead of launching a shell.\r\n4. **Use parameterized interfaces**: When interacting with external binaries or system commands, use APIs that separate code and data.\r\n5. **Principle of least privilege**: Run the PHP process with minimal OS privileges and in a restricted environment (e.g., chroot or container).\r\n\r\nExample fix:\r\n```php\r\n// Validate\r\nif (!preg_match('/^[a-zA-Z0-9_-]+$/', $user_input)) {\r\n  throw new InvalidArgumentException('Invalid input');\r\n}\r\n// Safe execution\r\n$escaped = escapeshellarg($user_input);\r\nexec(\"/usr/bin/safe-command $escaped\", $output, $status);\r\n```",
+                    "id": "089d5f4a-7f5d-474e-9f64-3d1c84b3ceeb",
+                    "name": "Cross-Site Scripting via Insecure Document Methods",
+                    "shortDescription": "Unsanitized user-controlled data passed to document methods like innerHTML, outerHTML, or document.write allows execution of arbitrary scripts.",
+                    "description": "Direct assignment of **user-controlled data** to **innerHTML**, **outerHTML**, or **document.write** introduces a Cross-Site Scripting (XSS) risk. In the provided code:\r\n\r\n- `bad1(userInput)` uses `el.innerHTML = '<div>' + userInput + '</div>'`\r\n- `bad2(userInput)` uses `document.body.outerHTML = userInput`\r\n- `bad3(userInput)` builds a string with `userInput` and calls `document.write(name)`\r\n\r\nEach method injects raw input into the DOM, allowing an attacker to execute arbitrary JavaScript within the page context. This may lead to cookie theft, session hijacking, DOM manipulation, and unauthorized access to sensitive data.",
+                    "howToPrevent": "1. Use **safe APIs** such as `textContent` or `innerText` instead of `innerHTML`/`outerHTML`:  \r\n   ```js\r\n   el.textContent = userInput;\r\n   ```\r\n2. **Validate and encode** all user input before inserting into the DOM. Employ a robust HTML sanitizer or a templating engine that escapes special characters.  \r\n3. Avoid `document.write`. If dynamic markup is required, build elements via `createElement` and set text nodes via `textContent`:  \r\n   ```js\r\n   const div = document.createElement('div');\r\n   div.textContent = userInput;\r\n   document.body.appendChild(div);\r\n   ```\r\n4. Adopt a **Content Security Policy (CSP)** to reduce impact of injected scripts.",
                     "severity": "HIGH",
-                    "language": "PHP",
+                    "language": "JavaScript",
                     "vulnerabilityType": "sast",
                     "cvss3": {
-                        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-                        "baseScore": "7.2"
+                        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:L",
+                        "baseScore": "8.3"
                     },
                     "_cvss3": "cvss3",
                     "sourceMetadata": {
@@ -92,14 +93,15 @@
                             "audit"
                         ],
                         "technology": [
-                            "php"
+                            "browser"
                         ],
                         "languages": [
-                            "PHP"
+                            "JavaScript",
+                            "TypeScript"
                         ],
                         "category": "security",
                         "confidence": "LOW",
-                        "impact": "HIGH",
+                        "impact": "LOW",
                         "likelihood": "LOW"
                     },
                     "_sourceMetadata": "sourceMetadata"
