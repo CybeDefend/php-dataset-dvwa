@@ -1899,5 +1899,313 @@
             "statut": "FP",
             "explication": "Cette vulnérabilité est un FAUX POSITIF. Bien que la ligne 40 contienne une concaténation SQL apparemment vulnérable, cette ligne n'est jamais exécutée et semble être du code mort ou un artifact. Le vrai flux d'exécution utilise des prepared statements sécurisés : 1) Validation multicouche avec patterns regex et blacklist de mots SQL, 2) Sanitisation avec intval() et htmlspecialchars(), 3) Templates avec placeholders, 4) Prepared statements avec bindValue(). Les données utilisateur sont entièrement isolées de la structure SQL. L'exploitation est impossible grâce aux multiples couches de sécurité."
         }
+    },
+    {
+        "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
+        "vulnerabilityId": "0de6888b-4717-4ca5-8501-dba65cb44ab2",
+        "sast": {
+            "base": {
+                "codeSnippets": [
+                    {
+                        "code": [
+                            {
+                                "line": 5,
+                                "content": "\r"
+                            },
+                            {
+                                "line": 6,
+                                "content": "// Input validation\r"
+                            },
+                            {
+                                "line": 7,
+                                "content": "if( !fnmatch( \"file*\", $file ) && $file != \"include.php\" ) {\r"
+                            },
+                            {
+                                "line": 8,
+                                "content": "\t// This isn't the page we want!\r"
+                            },
+                            {
+                                "line": 9,
+                                "content": "\techo \"ERROR: File not found!\";\r"
+                            }
+                        ],
+                        "id": "a9270a21-e756-4ed4-b82e-ac17c6e2e11b",
+                        "vulnerableStartLine": 7,
+                        "vulnerableEndLine": 7,
+                        "startLine": 5,
+                        "endLine": 9,
+                        "language": "PHP",
+                        "fixAnalysis": "",
+                        "fixAnalysisDescription": ""
+                    }
+                ],
+                "id": "0de6888b-4717-4ca5-8501-dba65cb44ab2",
+                "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
+                "createdAt": "2025-07-31T11:00:16.000Z",
+                "updateAt": "2025-07-31T11:00:16.000Z",
+                "timeToFix": "",
+                "currentState": "to_verify",
+                "currentSeverity": "HIGH",
+                "currentPriority": "urgent",
+                "contextualExplanation": "",
+                "language": "PHP",
+                "path": "DVWA-master/vulnerabilities/fi/source/high.php",
+                "vulnerableStartLine": 7,
+                "vulnerableEndLine": 7,
+                "vulnerability": {
+                    "cwe": [
+                        "CWE-918"
+                    ],
+                    "owaspTop10": [
+                        "A10:2021 - Server-Side Request Forgery (SSRF)"
+                    ],
+                    "cweArray": [
+                        "CWE-918"
+                    ],
+                    "references": [
+                        {
+                            "id": "87ec4b46-1ccb-4d1c-90a2-5d31961f10d4",
+                            "name": "OWASP Top 10 2021 - Server-Side Request Forgery",
+                            "url": "https://owasp.org/Top10/A10_2021-Server-Side_Request_Forgery_%28SSRF%29"
+                        }
+                    ],
+                    "codeExamples": [
+                        {
+                            "filename": "tainted-filename.php",
+                            "content": "<?php\n\n$tainted = $_GET[\"tainted\"];\n// ruleid: tainted-filename\nhash_file('sha1', $tainted);\n\n// ruleid: tainted-filename\nfile($tainted);\n\n// ok: tainted-filename\nhash_file($tainted, 'file.txt');\n\n// ruleid: tainted-filename\nfile(dirname($tainted));\n\n// Sanitized\n// ok: tainted-filename\nfile(basename($tainted));\n\n\n"
+                        }
+                    ],
+                    "id": "9e1958eb-7684-42c6-a10d-4529e6bad48d",
+                    "name": "Tainted Filename PHP SSRF",
+                    "shortDescription": "User-controlled filename passed to file-related functions may allow server-side HTTP requests to attacker-controlled or internal URLs.",
+                    "description": "**Unvalidated Filename Input**: PHP functions like **file()** and **hash_file()** can accept remote URLs when **allow_url_fopen** is enabled. If user input is passed directly as the filename parameter, an attacker can supply a URL pointing to internal services or external systems. The server will issue HTTP requests to the supplied address, potentially exposing internal data, scanning internal networks, or triggering unintended actions. The root cause is absence of input validation and allowlist enforcement on the filename parameter.",
+                    "howToPrevent": "Use secure coding practices to limit file access:\r\n\r\n- **Disable Remote Wrappers**: Set `allow_url_fopen = Off` in `php.ini` to prevent URL-based file operations.\r\n- **Input Validation**: Reject or sanitize inputs that contain URL schemes (`http://`, `https://`, `ftp://`).\r\n- **Allowlist Filenames**: Enforce a list of permitted filenames or patterns using regular expressions.\r\n- **Base Name Extraction**: Use `basename($input)` to strip path components and URL fragments before use.\r\n- **Explicit Fetch Logic**: If remote fetching is required, use cURL or HTTP client libraries with strict URL validation and allowlist of domains.",
+                    "severity": "HIGH",
+                    "language": "PHP",
+                    "vulnerabilityType": "sast",
+                    "cvss3": {
+                        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+                        "baseScore": "7.5"
+                    },
+                    "_cvss3": "cvss3",
+                    "sourceMetadata": {
+                        "subcategory": [
+                            "vuln"
+                        ],
+                        "technology": [
+                            "php"
+                        ],
+                        "languages": [
+                            "PHP"
+                        ],
+                        "category": "security",
+                        "confidence": "MEDIUM",
+                        "impact": "MEDIUM",
+                        "likelihood": "MEDIUM"
+                    },
+                    "_sourceMetadata": "sourceMetadata"
+                },
+                "historyItems": {
+                    "items": []
+                },
+                "vulnerabilityType": "sast",
+                "dataflow": [
+                    {
+                        "file": "vulnerabilities/fi/source/high.php",
+                        "category": "SOURCE",
+                        "ligne": 4,
+                        "explication": "Variable $file initialisée avec l'entrée utilisateur $_GET['page']",
+                        "variables": "$file"
+                    },
+                    {
+                        "file": "vulnerabilities/fi/source/high.php",
+                        "category": "VALIDATION",
+                        "ligne": 7,
+                        "explication": "Validation fnmatch() facilement contournable avec des chemins comme file../../../etc/passwd",
+                        "variables": "$file"
+                    },
+                    {
+                        "file": "vulnerabilities/fi/index.php",
+                        "category": "SINK",
+                        "ligne": 31,
+                        "explication": "Utilisation de la variable $file dans include() permettant l'inclusion de fichiers arbitraires",
+                        "variables": "$file"
+                    }
+                ],
+                "vulnerability_truth": {
+                    "statut": "TP",
+                    "explication": "Vrai positif - La validation fnmatch() peut être contournée avec des chemins comme file../../../etc/passwd, permettant l'inclusion de fichiers arbitraires via include($file)"
+                }
+            }
+        },
+        "vulnerability": "sast"
+    },
+    {
+        "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
+        "vulnerabilityId": "1de6888b-4717-4ca5-8501-dba65cb44ab3",
+        "sast": {
+            "base": {
+                "codeSnippets": [
+                    {
+                        "code": [
+                            {
+                                "line": 8,
+                                "content": "    public function checkAndClean($file_path) {\r"
+                            },
+                            {
+                                "line": 9,
+                                "content": "        if( !fnmatch( \"file*\", $file_path ) && $file_path != \"include.php\" ) {\r"
+                            },
+                            {
+                                "line": 10,
+                                "content": "            return false;\r"
+                            },
+                            {
+                                "line": 11,
+                                "content": "        }\r"
+                            },
+                            {
+                                "line": 12,
+                                "content": "        \r"
+                            }
+                        ],
+                        "id": "b9270a21-e756-4ed4-b82e-ac17c6e2e11c",
+                        "vulnerableStartLine": 9,
+                        "vulnerableEndLine": 9,
+                        "startLine": 8,
+                        "endLine": 12,
+                        "language": "PHP",
+                        "fixAnalysis": "",
+                        "fixAnalysisDescription": ""
+                    }
+                ],
+                "id": "1de6888b-4717-4ca5-8501-dba65cb44ab3",
+                "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
+                "createdAt": "2025-08-02T11:00:16.000Z",
+                "updateAt": "2025-08-02T11:00:16.000Z",
+                "timeToFix": "",
+                "currentState": "to_verify",
+                "currentSeverity": "HIGH",
+                "currentPriority": "urgent",
+                "contextualExplanation": "",
+                "language": "PHP",
+                "path": "DVWA-master/vulnerabilities/api/src/PathValidator.php",
+                "vulnerableStartLine": 9,
+                "vulnerableEndLine": 9,
+                "vulnerability": {
+                    "cwe": [
+                        "CWE-918"
+                    ],
+                    "owaspTop10": [
+                        "A10:2021 - Server-Side Request Forgery (SSRF)"
+                    ],
+                    "cweArray": [
+                        "CWE-918"
+                    ],
+                    "references": [
+                        {
+                            "id": "87ec4b46-1ccb-4d1c-90a2-5d31961f10d4",
+                            "name": "OWASP Top 10 2021 - Server-Side Request Forgery",
+                            "url": "https://owasp.org/Top10/A10_2021-Server-Side_Request_Forgery_%28SSRF%29"
+                        }
+                    ],
+                    "codeExamples": [
+                        {
+                            "filename": "tainted-filename.php",
+                            "content": "<?php\n\n$tainted = $_GET[\"tainted\"];\n// ruleid: tainted-filename\nhash_file('sha1', $tainted);\n\n// ruleid: tainted-filename\nfile($tainted);\n\n// ok: tainted-filename\nhash_file($tainted, 'file.txt');\n\n// ruleid: tainted-filename\nfile(dirname($tainted));\n\n// Sanitized\n// ok: tainted-filename\nfile(basename($tainted));\n\n\n"
+                        }
+                    ],
+                    "id": "9e1958eb-7684-42c6-a10d-4529e6bad48e",
+                    "name": "Tainted Filename PHP SSRF",
+                    "shortDescription": "User-controlled filename passed to file-related functions may allow server-side HTTP requests to attacker-controlled or internal URLs.",
+                    "description": "**Unvalidated Filename Input**: PHP functions like **file()** and **hash_file()** can accept remote URLs when **allow_url_fopen** is enabled. If user input is passed directly as the filename parameter, an attacker can supply a URL pointing to internal services or external systems. The server will issue HTTP requests to the supplied address, potentially exposing internal data, scanning internal networks, or triggering unintended actions. The root cause is absence of input validation and allowlist enforcement on the filename parameter.",
+                    "howToPrevent": "Use secure coding practices to limit file access:\r\n\r\n- **Disable Remote Wrappers**: Set `allow_url_fopen = Off` in `php.ini` to prevent URL-based file operations.\r\n- **Input Validation**: Reject or sanitize inputs that contain URL schemes (`http://`, `https://`, `ftp://`).\r\n- **Allowlist Filenames**: Enforce a list of permitted filenames or patterns using regular expressions.\r\n- **Base Name Extraction**: Use `basename($input)` to strip path components and URL fragments before use.\r\n- **Explicit Fetch Logic**: If remote fetching is required, use cURL or HTTP client libraries with strict URL validation and allowlist of domains.",
+                    "severity": "HIGH",
+                    "language": "PHP",
+                    "vulnerabilityType": "sast",
+                    "cvss3": {
+                        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+                        "baseScore": "7.5"
+                    },
+                    "_cvss3": "cvss3",
+                    "sourceMetadata": {
+                        "subcategory": [
+                            "vuln"
+                        ],
+                        "technology": [
+                            "php"
+                        ],
+                        "languages": [
+                            "PHP"
+                        ],
+                        "category": "security",
+                        "confidence": "MEDIUM",
+                        "impact": "MEDIUM",
+                        "likelihood": "MEDIUM"
+                    },
+                    "_sourceMetadata": "sourceMetadata"
+                },
+                "historyItems": {
+                    "items": []
+                },
+                "vulnerabilityType": "sast",
+                "dataflow": [
+                    {
+                        "file": "vulnerabilities/api/document_processor.php",
+                        "category": "SOURCE",
+                        "ligne": 12,
+                        "explication": "Réception de données JSON contenant le paramètre 'document' depuis l'entrée utilisateur",
+                        "variables": "$input['document']"
+                    },
+                    {
+                        "file": "vulnerabilities/api/src/DocumentManager.php",
+                        "category": "PROPAGATION",
+                        "ligne": 6,
+                        "explication": "Assignation de la variable d'entrée à $file_param et transmission vers validateAndPrepare",
+                        "variables": "$file_param"
+                    },
+                    {
+                        "file": "vulnerabilities/api/src/FileHelper.php",
+                        "category": "PROPAGATION",
+                        "ligne": 6,
+                        "explication": "Transmission de la variable vers PathProcessor via prepareFilePath",
+                        "variables": "$user_path"
+                    },
+                    {
+                        "file": "vulnerabilities/api/src/PathProcessor.php",
+                        "category": "PROPAGATION",
+                        "ligne": 6,
+                        "explication": "Passage de la variable vers PathValidator via handlePath",
+                        "variables": "$input_path"
+                    },
+                    {
+                        "file": "vulnerabilities/api/src/PathValidator.php",
+                        "category": "VALIDATION",
+                        "ligne": 9,
+                        "explication": "Validation fnmatch() identique à la vulnérabilité originale mais variable ensuite transmise vers SecurityFilter",
+                        "variables": "$file_path"
+                    },
+                    {
+                        "file": "vulnerabilities/api/src/SecurityFilter.php",
+                        "category": "SANITIZATION",
+                        "ligne": 6,
+                        "explication": "Application subtile de basename() qui neutralise les tentatives de path traversal",
+                        "variables": "$clean_name"
+                    },
+                    {
+                        "file": "vulnerabilities/api/src/DocumentReader.php",
+                        "category": "SINK",
+                        "ligne": 9,
+                        "explication": "Utilisation finale dans include() mais avec un basename() appliqué rendant la vulnérabilité inexploitable",
+                        "variables": "$safe_path"
+                    }
+                ],
+                "vulnerability_truth": {
+                    "statut": "FP",
+                    "explication": "Faux positif - Bien que fnmatch() soit utilisé comme dans la vulnérabilité originale, l'application de basename() dans SecurityFilter.php neutralise toute tentative de path traversal. La variable finale utilisée dans include() ne peut plus contenir de chemins malveillants."
+                }
+            }
+        },
+        "vulnerability": "sast"
     }
 ]

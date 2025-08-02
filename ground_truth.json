@@ -1,1 +1,115 @@
-[]
+[
+    {
+        "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
+        "vulnerabilityId": "20f73eb7-637b-47d2-adf6-1bf86845cb7e",
+        "sast": {
+            "base": {
+                "codeSnippets": [
+                    {
+                        "code": [
+                            {
+                                "line": 12,
+                                "content": "\telse {\r"
+                            },
+                            {
+                                "line": 13,
+                                "content": "\t\t// *nix\r"
+                            },
+                            {
+                                "line": 14,
+                                "content": "\t\t$cmd = shell_exec( 'ping  -c 4 ' . $target );\r"
+                            },
+                            {
+                                "line": 15,
+                                "content": "\t}\r"
+                            },
+                            {
+                                "line": 16,
+                                "content": "\r"
+                            }
+                        ],
+                        "id": "688d2773-55c4-4f46-9cd6-c7fecad01344",
+                        "vulnerableStartLine": 14,
+                        "vulnerableEndLine": 14,
+                        "startLine": 12,
+                        "endLine": 16,
+                        "language": "PHP",
+                        "fixAnalysis": "",
+                        "fixAnalysisDescription": ""
+                    }
+                ],
+                "id": "20f73eb7-637b-47d2-adf6-1bf86845cb7e",
+                "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
+                "createdAt": "2025-07-31T11:00:16.000Z",
+                "updateAt": "2025-07-31T11:00:16.000Z",
+                "timeToFix": "",
+                "currentState": "to_verify",
+                "currentSeverity": "HIGH",
+                "currentPriority": "urgent",
+                "contextualExplanation": "",
+                "language": "PHP",
+                "path": "DVWA-master/vulnerabilities/exec/source/low.php",
+                "vulnerableStartLine": 14,
+                "vulnerableEndLine": 14,
+                "vulnerability": {
+                    "cwe": [
+                        "CWE-94"
+                    ],
+                    "owaspTop10": [
+                        "A03:2021 - Injection"
+                    ],
+                    "cweArray": [
+                        "CWE-94"
+                    ],
+                    "references": [
+                        {
+                            "id": "e2921455-2b30-4392-b4d7-c0be76e6abba",
+                            "name": "PHP CodeSniffer Security Audit - SystemExecFunctionsSniff",
+                            "url": "https://github.com/FloeDesignTechnologies/phpcs-security-audit/blob/master/Security/Sniffs/BadFunctions/SystemExecFunctionsSniff.php"
+                        }
+                    ],
+                    "codeExamples": [
+                        {
+                            "filename": "exec-use.php",
+                            "content": "<?php\n\n// ruleid: exec-use\nexec($user_input);\n\n// ok: exec-use\nexec('whoami');\n\n// ruleid: exec-use\npassthru($user_input);\n\n// ruleid: exec-use\n$proc = proc_open($cmd, $descriptorspec, $pipes);\n\n// ruleid: exec-use\n$handle = popen($user_input, \"r\");\n\n// ruleid: exec-use\n$output = shell_exec($user_input);\n\n// ruleid: exec-use\n$output = system($user_input, $retval);\n\n// ruleid: exec-use\npcntl_exec($path);\n"
+                        }
+                    ],
+                    "id": "4bf27560-4e42-4953-8904-b9d63c40e892",
+                    "name": "Dynamic Command Execution",
+                    "shortDescription": "Use of non-constant commands in exec and related functions enables OS command injection by untrusted input.",
+                    "description": "This vulnerability arises when **untrusted input** is passed directly to **shell execution functions** such as `exec()`, `passthru()`, `system()`, `shell_exec()`, `popen()`, `proc_open()`, or `pcntl_exec()`. In the provided code example, calls like `exec($user_input)` or `shell_exec($user_input)` allow an attacker to inject arbitrary operating system commands. The root cause is lack of input **validation** and **escaping**, which permits injection of command delimiters, chained commands, or malicious payloads. Successful exploitation can lead to full system compromise, data theft, or denial of service by executing arbitrary commands with the privileges of the application process.",
+                    "howToPrevent": "1. **Validate and sanitize input**: Accept only known-safe characters or patterns. Use strict whitelists rather than blacklists.\r\n2. **Escape shell arguments**: Wrap each dynamic value with functions like `escapeshellarg()` or `escapeshellcmd()` when shell invocation is unavoidable.\r\n3. **Avoid shell invocation**: Prefer native functions or libraries (e.g., PHP’s built-in file or network functions) instead of launching a shell.\r\n4. **Use parameterized interfaces**: When interacting with external binaries or system commands, use APIs that separate code and data.\r\n5. **Principle of least privilege**: Run the PHP process with minimal OS privileges and in a restricted environment (e.g., chroot or container).\r\n\r\nExample fix:\r\n```php\r\n// Validate\r\nif (!preg_match('/^[a-zA-Z0-9_-]+$/', $user_input)) {\r\n  throw new InvalidArgumentException('Invalid input');\r\n}\r\n// Safe execution\r\n$escaped = escapeshellarg($user_input);\r\nexec(\"/usr/bin/safe-command $escaped\", $output, $status);\r\n```",
+                    "severity": "HIGH",
+                    "language": "PHP",
+                    "vulnerabilityType": "sast",
+                    "cvss3": {
+                        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                        "baseScore": "7.2"
+                    },
+                    "_cvss3": "cvss3",
+                    "sourceMetadata": {
+                        "subcategory": [
+                            "audit"
+                        ],
+                        "technology": [
+                            "php"
+                        ],
+                        "languages": [
+                            "PHP"
+                        ],
+                        "category": "security",
+                        "confidence": "LOW",
+                        "impact": "HIGH",
+                        "likelihood": "LOW"
+                    },
+                    "_sourceMetadata": "sourceMetadata"
+                },
+                "historyItems": {
+                    "items": []
+                },
+                "vulnerabilityType": "sast"
+            }
+        },
+        "vulnerability": "sast"
+    }
+]
