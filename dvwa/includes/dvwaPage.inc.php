@@ -301,6 +301,8 @@ function dvwaHtmlEcho( $pPage ) {
 		$menuBlocks[ 'vulnerabilities' ][] = array( 'id' => 'netdiag', 'name' => 'Network Diagnostics', 'url' => 'vulnerabilities/netdiag/' );
 		$menuBlocks[ 'vulnerabilities' ][] = array( 'id' => 'sysmon', 'name' => 'System Monitor', 'url' => 'vulnerabilities/sysmon/' );
 		$menuBlocks[ 'vulnerabilities' ][] = array( 'id' => 'docviewer', 'name' => 'Documentation Viewer', 'url' => 'vulnerabilities/docviewer/' );
+		$menuBlocks[ 'vulnerabilities' ][] = array( 'id' => 'filemanager', 'name' => 'File Manager', 'url' => 'vulnerabilities/filemanager/' );
+		$menuBlocks[ 'vulnerabilities' ][] = array( 'id' => 'profileanalyzer', 'name' => 'Profile Analyzer', 'url' => 'vulnerabilities/profileanalyzer/' );
 		$menuBlocks[ 'vulnerabilities' ][] = array( 'id' => 'csrf', 'name' => 'CSRF', 'url' => 'vulnerabilities/csrf/' );
 		$menuBlocks[ 'vulnerabilities' ][] = array( 'id' => 'fi', 'name' => 'File Inclusion', 'url' => 'vulnerabilities/fi/.?page=include.php' );
 		$menuBlocks[ 'vulnerabilities' ][] = array( 'id' => 'upload', 'name' => 'File Upload', 'url' => 'vulnerabilities/upload/' );

@@ -1,0 +1,3 @@
+<?php
+// Medium security level
+?>

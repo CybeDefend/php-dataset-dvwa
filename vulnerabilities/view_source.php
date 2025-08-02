@@ -38,6 +38,12 @@ if (array_key_exists ("id", $_GET) && array_key_exists ("security", $_GET)) {
 		case "docviewer" :
 			$vuln = 'Documentation Viewer';
 			break;
+		case "filemanager" :
+			$vuln = 'File Manager';
+			break;
+		case "profileanalyzer" :
+			$vuln = 'Profile Analyzer';
+			break;
 		case "sqli" :
 			$vuln = 'SQL Injection';
 			break;

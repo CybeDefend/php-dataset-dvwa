@@ -59,6 +59,9 @@ Je vais maintenant te détailler chaque étape qu’il faudra faire pour réalis
 		On vient dupliquer la source en recopiant le code (ce que le scanner a détecté afin qu’il détecte également cette nouvelle vulnérabilité) et nous allons créer un FAUX POSITIF.
 	Après la création il faudra alors dupliquer également la vulnérabilité dans le fichier ground_truth.json en ajoutant tout comme la vulnérabilité précédente son “dataflow” et son “vulnerability_truth”.
 
+	Nous travaillons avec l'application DVWA. De ce fait si c'set un faux positif ça veut surement dire que la vulnerabilité se trouve dans un fichier IMPOSSIBLE. 
+	Et donc pour créer le VRAI positif sur plusieurs fichiers pour complexifier la tache, inspire toi du fichier low ou medium. A l'inverse pour créer un FAUX POSITIF alors inspire toi du fichier IMPOSSIBLE.
+
 	ATTENTION - CREATION DE NOUVELLE VULNERABILITE REGLE A RESPECTER IMPERATIVEMENT :
 		- Il faut absolument que mon scanner détecte la vulnérabilité. De ce fait c’est important de recopier simplement ce qui a été detecté et ensuite de modifier la variable vulnérable en amont pour en faire un VRAI ou un FAUX positif.
 		- DIRECTIVE : ÉCRIRE UN CODE SUBTIL ET RÉALISTE

@@ -1227,5 +1227,346 @@
             "statut": "FP",
             "explication": "Cette vulnérabilité est un FAUX POSITIF. Bien que eval() soit utilisé, plusieurs couches de sécurité empêchent l'exploitation : (1) PathValidator bloque les patterns malveillants (.., /, eval, etc.), (2) ContentProcessor applique une sanitisation stricte avec regex ne gardant que [a-zA-Z0-9_-], (3) SecurityFilter supprime toutes les fonctions dangereuses et balises PHP/script du contenu avant eval(). Le dataflow complexe sur 5 fichiers garantit qu'aucun contenu malveillant ne peut atteindre eval(). La validation realpath() empêche aussi le path traversal."
         }
+    },
+    {
+        "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
+        "vulnerabilityId": "6672ec80-898a-484b-bac7-a4eca0cc57b6",
+        "sast": {
+            "base": {
+                "codeSnippets": [
+                    {
+                        "code": [
+                            {
+                                "line": 49,
+                                "content": "\t\t// Delete any temp files\r"
+                            },
+                            {
+                                "line": 50,
+                                "content": "\t\tif( file_exists( $temp_file ) )\r"
+                            },
+                            {
+                                "line": 51,
+                                "content": "\t\t\tunlink( $temp_file );\r"
+                            },
+                            {
+                                "line": 52,
+                                "content": "\t}\r"
+                            },
+                            {
+                                "line": 53,
+                                "content": "\telse {\r"
+                            }
+                        ],
+                        "id": "0a662b22-456e-4844-bd17-afd3b5fd6763",
+                        "vulnerableStartLine": 51,
+                        "vulnerableEndLine": 51,
+                        "startLine": 49,
+                        "endLine": 53,
+                        "language": "PHP",
+                        "fixAnalysis": "",
+                        "fixAnalysisDescription": ""
+                    }
+                ],
+                "id": "6672ec80-898a-484b-bac7-a4eca0cc57b6",
+                "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
+                "createdAt": "2025-07-31T11:00:17.000Z",
+                "updateAt": "2025-07-31T11:00:17.000Z",
+                "timeToFix": "",
+                "currentState": "to_verify",
+                "currentSeverity": "CRITICAL",
+                "currentPriority": "critical_urgent",
+                "contextualExplanation": "",
+                "language": "PHP",
+                "path": "DVWA-master/vulnerabilities/upload/source/impossible.php",
+                "vulnerableStartLine": 51,
+                "vulnerableEndLine": 51,
+                "vulnerability": {
+                    "cwe": [
+                        "CWE-22"
+                    ],
+                    "owaspTop10": [
+                        "A05:2017 - Broken Access Control",
+                        "A01:2021 - Broken Access Control"
+                    ],
+                    "cweArray": [
+                        "CWE-22"
+                    ],
+                    "references": [
+                        {
+                            "id": "810130cc-b90a-418f-a5dc-41dd03465561",
+                            "name": "OWASP Broken Access Control",
+                            "url": "https://owasp.org/www-project-top-ten/2017/A5_2017-Broken_Access_Control.html"
+                        },
+                        {
+                            "id": "e91eb5b9-2679-4daa-82f2-9d01e8084b04",
+                            "name": "PHP unlink function documentation",
+                            "url": "https://www.php.net/manual/en/function.unlink"
+                        }
+                    ],
+                    "codeExamples": [
+                        {
+                            "filename": "unlink-use.php",
+                            "content": "<?php\n\n$data = $_GET[\"data\"];\n// ruleid: unlink-use\nunlink(\"/storage/\" . $data . \"/test\");\n\n// ok: unlink-use\nunlink('/storage/foobar/test');\n"
+                        }
+                    ],
+                    "id": "b14d29e7-1c7c-4adb-a154-178f9ba180fd",
+                    "name": "Improper File Deletion via unlink()",
+                    "shortDescription": "Unsanitized user input in unlink() allows attackers to delete unauthorized files under the storage directory.",
+                    "description": "The code calls **unlink()** with a path constructed from user-supplied input without validation. An attacker can inject a relative path (e.g., `../../`) in `data` to break out of the intended `/storage/` directory, causing deletion of arbitrary files. This flaw stems from failure to enforce **path canonicalization** and **access control** on the file path. Impact includes unauthorized file removal leading to data loss or service disruption.",
+                    "howToPrevent": "- **Validate and sanitize input**: use a strict allowlist of filenames or patterns and reject unexpected characters (e.g., `..`, `/`).\r\n- **Canonicalize paths**: apply `realpath()` after concatenation and verify that the result starts with the intended base directory.\r\n- **Enforce access checks**: ensure the application user has permission to delete only specified files.\r\n- **Avoid direct use of user input**: use fixed directory references or generate file paths on the server side.",
+                    "severity": "CRITICAL",
+                    "language": "PHP",
+                    "vulnerabilityType": "sast",
+                    "cvss3": {
+                        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:H",
+                        "baseScore": "9.1"
+                    },
+                    "_cvss3": "cvss3",
+                    "sourceMetadata": {
+                        "subcategory": [
+                            "audit"
+                        ],
+                        "technology": [
+                            "php"
+                        ],
+                        "languages": [
+                            "PHP"
+                        ],
+                        "category": "security",
+                        "confidence": "LOW",
+                        "impact": "MEDIUM",
+                        "likelihood": "LOW"
+                    },
+                    "_sourceMetadata": "sourceMetadata"
+                },
+                "historyItems": {
+                    "items": []
+                },
+                "vulnerabilityType": "sast"
+            }
+        },
+        "vulnerability": "sast",
+        "dataflow": [
+            {
+                "file": "vulnerabilities/upload/source/impossible.php",
+                "category": "SOURCE",
+                "ligne": 9,
+                "explication": "Input utilisateur via le nom du fichier uploadé",
+                "variables": "$_FILES['uploaded']['name']"
+            },
+            {
+                "file": "vulnerabilities/upload/source/impossible.php",
+                "category": "PROPAGATION",
+                "ligne": 9,
+                "explication": "Assignation de $_FILES['uploaded']['name'] à $uploaded_name",
+                "variables": "$uploaded_name"
+            },
+            {
+                "file": "vulnerabilities/upload/source/impossible.php",
+                "category": "TRANSFORMATION_SECURISEE",
+                "ligne": 19,
+                "explication": "Construction sécurisée du chemin temporaire avec md5(uniqid() + nom_fichier)",
+                "variables": "$temp_file"
+            },
+            {
+                "file": "vulnerabilities/upload/source/impossible.php",
+                "category": "VALIDATION",
+                "ligne": 20,
+                "explication": "Le chemin final est basé sur sys_get_temp_dir() + hash imprévisible",
+                "variables": "$temp_file"
+            },
+            {
+                "file": "vulnerabilities/upload/source/impossible.php",
+                "category": "SINK",
+                "ligne": 51,
+                "explication": "Suppression du fichier temporaire via unlink() avec chemin sécurisé",
+                "variables": "$temp_file"
+            }
+        ],
+        "vulnerability_truth": {
+            "statut": "FP",
+            "explication": "Cette vulnérabilité est un FAUX POSITIF. Bien que unlink() soit appelé avec une variable dérivée d'un input utilisateur, le chemin du fichier est sécurisé par plusieurs mécanismes : 1) Le nom de fichier est hashé avec md5(uniqid() + nom) rendant le chemin imprévisible, 2) Le répertoire de base est contrôlé par sys_get_temp_dir(), 3) L'attaquant ne peut pas contrôler directement le chemin final. Il s'agit du niveau 'impossible' qui implémente des protections robustes contre path traversal."
+        }
+    },
+    {
+        "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
+        "vulnerabilityId": "e42458e2-41c5-4481-a409-b121c424894f",
+        "sast": {
+            "base": {
+                "codeSnippets": [
+                    {
+                        "code": [
+                            {
+                                "line": 44,
+                                "content": "    private function deleteFile($file_path) {\r"
+                            },
+                            {
+                                "line": 45,
+                                "content": "        if (file_exists($file_path)) {\r"
+                            },
+                            {
+                                "line": 46,
+                                "content": "            return unlink($file_path);\r"
+                            },
+                            {
+                                "line": 47,
+                                "content": "        }\r"
+                            },
+                            {
+                                "line": 48,
+                                "content": "        return false;\r"
+                            }
+                        ],
+                        "id": "e42458e2-41c5-4481-a409-b121c424894f",
+                        "vulnerableStartLine": 46,
+                        "vulnerableEndLine": 46,
+                        "startLine": 44,
+                        "endLine": 48,
+                        "language": "PHP",
+                        "fixAnalysis": "",
+                        "fixAnalysisDescription": ""
+                    }
+                ],
+                "id": "e42458e2-41c5-4481-a409-b121c424894f",
+                "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
+                "createdAt": "2025-08-02T15:30:00.000Z",
+                "updateAt": "2025-08-02T15:30:00.000Z",
+                "timeToFix": "",
+                "currentState": "to_verify",
+                "currentSeverity": "CRITICAL",
+                "currentPriority": "critical_urgent",
+                "contextualExplanation": "",
+                "language": "PHP",
+                "path": "DVWA-master/vulnerabilities/filemanager/includes/operation_handler.php",
+                "vulnerableStartLine": 46,
+                "vulnerableEndLine": 46,
+                "vulnerability": {
+                    "cwe": [
+                        "CWE-22"
+                    ],
+                    "owaspTop10": [
+                        "A05:2017 - Broken Access Control",
+                        "A01:2021 - Broken Access Control"
+                    ],
+                    "cweArray": [
+                        "CWE-22"
+                    ],
+                    "references": [
+                        {
+                            "id": "810130cc-b90a-418f-a5dc-41dd03465561",
+                            "name": "OWASP Broken Access Control",
+                            "url": "https://owasp.org/www-project-top-ten/2017/A5_2017-Broken_Access_Control.html"
+                        },
+                        {
+                            "id": "e91eb5b9-2679-4daa-82f2-9d01e8084b04",
+                            "name": "PHP unlink function documentation",
+                            "url": "https://www.php.net/manual/en/function.unlink"
+                        }
+                    ],
+                    "codeExamples": [
+                        {
+                            "filename": "unlink-use.php",
+                            "content": "<?php\n\n$data = $_GET[\"data\"];\n// ruleid: unlink-use\nunlink(\"/storage/\" . $data . \"/test\");\n\n// ok: unlink-use\nunlink('/storage/foobar/test');\n"
+                        }
+                    ],
+                    "id": "b14d29e7-1c7c-4adb-a154-178f9ba180fd",
+                    "name": "Improper File Deletion via unlink()",
+                    "shortDescription": "Unsanitized user input in unlink() allows attackers to delete unauthorized files under the storage directory.",
+                    "description": "The code calls **unlink()** with a path constructed from user-supplied input without validation. An attacker can inject a relative path (e.g., `../../`) in `data` to break out of the intended `/storage/` directory, causing deletion of arbitrary files. This flaw stems from failure to enforce **path canonicalization** and **access control** on the file path. Impact includes unauthorized file removal leading to data loss or service disruption.",
+                    "howToPrevent": "- **Validate and sanitize input**: use a strict allowlist of filenames or patterns and reject unexpected characters (e.g., `..`, `/`).\r\n- **Canonicalize paths**: apply `realpath()` after concatenation and verify that the result starts with the intended base directory.\r\n- **Enforce access checks**: ensure the application user has permission to delete only specified files.\r\n- **Avoid direct use of user input**: use fixed directory references or generate file paths on the server side.",
+                    "severity": "CRITICAL",
+                    "language": "PHP",
+                    "vulnerabilityType": "sast",
+                    "cvss3": {
+                        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:H",
+                        "baseScore": "9.1"
+                    },
+                    "_cvss3": "cvss3",
+                    "sourceMetadata": {
+                        "subcategory": [
+                            "audit"
+                        ],
+                        "technology": [
+                            "php"
+                        ],
+                        "languages": [
+                            "PHP"
+                        ],
+                        "category": "security",
+                        "confidence": "LOW",
+                        "impact": "MEDIUM",
+                        "likelihood": "LOW"
+                    },
+                    "_sourceMetadata": "sourceMetadata"
+                },
+                "historyItems": {
+                    "items": []
+                },
+                "vulnerabilityType": "sast"
+            }
+        },
+        "vulnerability": "sast",
+        "dataflow": [
+            {
+                "file": "vulnerabilities/filemanager/index.php",
+                "category": "SOURCE",
+                "ligne": 17,
+                "explication": "Input utilisateur via $_POST['file_path'] depuis le formulaire",
+                "variables": "$_POST['file_path']"
+            },
+            {
+                "file": "vulnerabilities/filemanager/includes/storage_controller.php",
+                "category": "PROPAGATION",
+                "ligne": 18,
+                "explication": "La variable file_path est passée à handleFileOperation()",
+                "variables": "$file_path"
+            },
+            {
+                "file": "vulnerabilities/filemanager/includes/storage_controller.php",
+                "category": "TRANSFORMATION",
+                "ligne": 26,
+                "explication": "Construction de operation_config avec target contenant le chemin utilisateur",
+                "variables": "$operation_config['target']"
+            },
+            {
+                "file": "vulnerabilities/filemanager/includes/operation_handler.php",
+                "category": "PROPAGATION",
+                "ligne": 15,
+                "explication": "La configuration est passée à resolveTargetPaths()",
+                "variables": "$config"
+            },
+            {
+                "file": "vulnerabilities/filemanager/includes/path_resolver.php",
+                "category": "PROPAGATION",
+                "ligne": 14,
+                "explication": "target_pattern récupère la valeur utilisateur non validée",
+                "variables": "$target_pattern"
+            },
+            {
+                "file": "vulnerabilities/filemanager/includes/path_resolver.php",
+                "category": "TRANSFORMATION",
+                "ligne": 17,
+                "explication": "buildDirectPath concatène base_dir et user input sans validation",
+                "variables": "$relative_path"
+            },
+            {
+                "file": "vulnerabilities/filemanager/includes/pattern_processor.php",
+                "category": "FAILLE_CACHEE",
+                "ligne": 42,
+                "explication": "Header X-File-Context peut remplacer le pattern avec du base64 décodé",
+                "variables": "$context_path"
+            },
+            {
+                "file": "vulnerabilities/filemanager/includes/operation_handler.php",
+                "category": "SINK",
+                "ligne": 46,
+                "explication": "unlink() appelé avec chemin contrôlé par l'utilisateur via path traversal",
+                "variables": "$file_path"
+            }
+        ],
+        "vulnerability_truth": {
+            "statut": "TP",
+            "explication": "Cette vulnérabilité est un VRAI POSITIF. Le dataflow complexe sur 5 fichiers permet à un attaquant de contrôler le chemin passé à unlink() de plusieurs façons : 1) Via $_POST['file_path'] avec path traversal (ex: ../../../etc/passwd), 2) Via le header HTTP 'X-File-Context' contenant un chemin base64 encodé qui remplace le pattern dans PatternProcessor. Le chemin n'est jamais validé et permet la suppression de fichiers arbitraires sur le système. L'attaquant peut exploiter cette faille via le formulaire web ou en envoyant des requêtes avec des headers malveillants."
+        }
     }
 ]
