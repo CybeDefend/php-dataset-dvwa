@@ -38,33 +38,6 @@
                         "fixAnalysisDescription": ""
                     }
                 ],
-                "dataflow": [
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/brute/index.php",
-                        "category": "ENTRY_POINT",
-                        "ligne": 43,
-                        "explication": "Formulaire HTML exposé via interface web DVWA permettant la saisie utilisateur",
-                        "variables": "username (input field)"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/brute/source/low.php",
-                        "category": "SOURCE",
-                        "ligne": 5,
-                        "explication": "Récupération directe de l'input utilisateur via $_GET sans validation",
-                        "variables": "$user = $_GET['username']"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/brute/source/low.php",
-                        "category": "SINK",
-                        "ligne": 12,
-                        "explication": "Injection directe de la variable utilisateur dans la requête SQL",
-                        "variables": "$user dans la requête SQL"
-                    }
-                ],
-                "vulnerability_truth": {
-                    "statut": "TP",
-                    "explication": "Cette vulnérabilité est un vrai positif. L'input utilisateur provenant de $_GET['username'] est directement injecté dans une requête SQL sans aucune sanitisation ou utilisation de requêtes préparées. Un attaqueur peut exploiter cette faille en injectant du code SQL malveillant via le paramètre username. L'application est accessible via l'interface web DVWA, rendant cette vulnérabilité exploitable."
-                },
                 "id": "05118b39-ff58-4a49-9abd-92d5946fb303",
                 "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
                 "createdAt": "2025-07-31T11:00:15.000Z",
@@ -138,176 +111,34 @@
                 "vulnerabilityType": "sast"
             }
         },
-        "vulnerability": "sast"
-    },
-    {
-        "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
-        "vulnerabilityId": "401dc439-b220-481f-a958-5833ca38fe25",
-        "sast": {
-            "base": {
-                "codeSnippets": [
-                    {
-                        "code": [
-                            {
-                                "line": 32,
-                                "content": "\r"
-                            },
-                            {
-                                "line": 33,
-                                "content": "\tprivate function performDatabaseSearch($user) {\r"
-                            },
-                            {
-                                "line": 34,
-                                "content": "\t\t$query  = \"SELECT * FROM `users` WHERE user = '$user' AND status = 'active';\";\r"
-                            },
-                            {
-                                "line": 35,
-                                "content": "\t\t$result = mysqli_query($GLOBALS[\"___mysqli_ston\"], $query) or die('<pre>' . ((is_object($GLOBALS[\"___mysqli_ston\"])) ? mysqli_error($GLOBALS[\"___mysqli_ston\"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)) . '</pre>');\r"
-                            },
-                            {
-                                "line": 36,
-                                "content": "\r"
-                            }
-                        ],
-                        "id": "a1b2c3d4-e5f6-4789-abc1-234567890123",
-                        "vulnerableStartLine": 34,
-                        "vulnerableEndLine": 34,
-                        "startLine": 32,
-                        "endLine": 36,
-                        "language": "PHP",
-                        "fixAnalysis": "",
-                        "fixAnalysisDescription": ""
-                    }
-                ],
-                "dataflow": [
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/profile/index.php",
-                        "category": "ENTRY_POINT",
-                        "ligne": 43,
-                        "explication": "Formulaire HTML exposé via interface web DVWA pour recherche de profils",
-                        "variables": "username (input field)"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/profile/source/low.php",
-                        "category": "SOURCE",
-                        "ligne": 7,
-                        "explication": "Récupération de l'input utilisateur via $_GET",
-                        "variables": "$user_input = $_GET['username']"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/profile/includes/data_handler.php",
-                        "category": "PROPAGATION",
-                        "ligne": 11,
-                        "explication": "Transmission de l'input vers processUserSearch",
-                        "variables": "$search_term (paramètre de fonction)"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/profile/includes/data_handler.php",
-                        "category": "SANITIZATION",
-                        "ligne": 32,
-                        "explication": "Application de filtres de sécurité : trim et strip_tags",
-                        "variables": "$filtered_term = applyInitialFilter($term)"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/profile/includes/validator.php",
-                        "category": "VALIDATION",
-                        "ligne": 11,
-                        "explication": "Validation stricte avec whitelist de valeurs autorisées",
-                        "variables": "$validated_input = validateSearchInput()"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/profile/includes/validator.php",
-                        "category": "WHITELIST_CHECK",
-                        "ligne": 25,
-                        "explication": "Contrôle strict: seules les valeurs ['admin','test','demo','guest'] sont autorisées",
-                        "variables": "in_array($input, $allowed_patterns, true)"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/profile/includes/query_builder.php",
-                        "category": "SINK",
-                        "ligne": 34,
-                        "explication": "Injection dans requête SQL mais seulement avec valeurs whitelistées",
-                        "variables": "$user dans la requête SQL"
-                    }
-                ],
-                "vulnerability_truth": {
-                    "statut": "FP",
-                    "explication": "Cette vulnérabilité est un faux positif. Bien que l'input utilisateur soit directement injecté dans une requête SQL (détecté par le scanner), il existe une validation stricte par whitelist qui limite les valeurs possibles à seulement 4 valeurs prédéfinies : 'admin', 'test', 'demo', 'guest'. Cette whitelist empêche complètement l'injection de code SQL malveillant, rendant la vulnérabilité non exploitable malgré l'absence de requêtes préparées."
-                },
-                "id": "401dc439-b220-481f-a958-5833ca38fe25",
-                "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
-                "createdAt": "2025-07-31T11:00:15.000Z",
-                "updateAt": "2025-07-31T11:00:15.000Z",
-                "timeToFix": "",
-                "currentState": "to_verify",
-                "currentSeverity": "CRITICAL",
-                "currentPriority": "critical_urgent",
-                "contextualExplanation": "",
-                "language": "PHP",
-                "path": "DVWA-master/vulnerabilities/profile/includes/query_builder.php",
-                "vulnerableStartLine": 34,
-                "vulnerableEndLine": 34,
-                "vulnerability": {
-                    "cwe": [
-                        "CWE-89"
-                    ],
-                    "owaspTop10": [
-                        "A01:2017 - Injection",
-                        "A03:2021 - Injection"
-                    ],
-                    "cweArray": [
-                        "CWE-89"
-                    ],
-                    "references": [
-                        {
-                            "id": "05092a4b-88d2-4d21-a61b-c56a5be1a19e",
-                            "name": "SQL Injection - OWASP Community",
-                            "url": "https://owasp.org/www-community/attacks/SQL_Injection"
-                        }
-                    ],
-                    "codeExamples": [
-                        {
-                            "filename": "tainted-sql-string.go",
-                            "content": "package main\n\nimport (\n\t\"database/sql\"\n\t\"encoding/json\"\n\t\"log\"\n\t\"os\"\n\t\"strconv\"\n\n\t\"github.com/aws/aws-lambda-go/events\"\n\t\"github.com/aws/aws-lambda-go/lambda\"\n\t_ \"github.com/go-sql-driver/mysql\"\n)\n\nvar (\n\tdb               *sql.DB\n\terr              error\n\tconnectionString string\n\tdbUser           string\n\tdbPass           string\n\tdataSource       string\n)\n\ntype Employee struct {\n\tEmployeeNo int    `json:\"emp_no\"`\n\tFirstName  string `json:\"first_name\"`\n\tLastName   string `json:\"last_name\"`\n}\n\nfunc init() {\n\tconnectionString = os.Getenv(\"CONN\")\n\tdbUser = os.Getenv(\"DBUSER\")\n\tdbPass = os.Getenv(\"DBPASS\")\n\tdataSource = dbUser + \":\" + dbPass + \"@tcp(\" + connectionString + \")/employees\"\n}\n\nfunc handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {\n\n\tsearchCriteria := request.Body\n\n\tdb, err = sql.Open(\"mysql\", dataSource)\n\tif err != nil {\n\t\tpanic(err.Error())\n\t}\n\n\tdefer db.Close()\n\n\t// ruleid: tainted-sql-string\n\tresults, err := db.Query(\"select e.emp_no, e.first_name, e.last_name \" +\n\t\t\"from employees e, departments d, dept_emp de \" +\n\t\t\"where e.last_name LIKE '\" + searchCriteria + \"%';\")\n\n\tif err != nil {\n\t\tlog.Fatal(err)\n\t}\n\tdefer results.Close()\n\t// ruleid: tainted-sql-string\n\t_, err = db.Exec(` \n  DELETE FROM table WHERE Id = ` + request.Get(\"Id\"))\n\t// ruleid: tainted-sql-string\n\t_, err = db.Exec(\"DELETE FROM table WHERE Id = \" + request.Get(\"Id\"))\n\n\t// ok: tainted-sql-string\n\tlog.Printf(\"DELETE FROM table WHERE Id = \" + request.Get(\"Id\"))\n\t// ok: tainted-sql-string\n\t_, err = db.Exec(` FAKE\n  DELETE FROM table WHERE Id = ` + request.Get(\"Id\"))\n\n\tidhtml := request.Get(\"Id\")\n\tid, _ := strconv.Atoi(idhtml)\n\n\t// ok: tainted-sql-string\n\t_, err = db.Exec(\"DELETE FROM table WHERE Id = \" + id)\n\n\t// ok: tainted-sql-string\n\tresults2, err2 := db.Query(\"select * from foobar\")\n\n\temployees := make([]Employee, 0)\n\n\tfor results.Next() {\n\t\tvar e Employee\n\n\t\terr := results.Scan(&e.EmployeeNo, &e.FirstName, &e.LastName)\n\t\tif err != nil {\n\t\t\tlog.Fatal(err)\n\t\t}\n\t\temployees = append(employees, e)\n\t}\n\n\tdata, _ := json.Marshal(employees)\n\n\treturn events.APIGatewayProxyResponse{\n\t\tStatusCode:      200,\n\t\tBody:            string(data),\n\t\tIsBase64Encoded: false,\n\t}, nil\n}\n\nfunc main() {\n\tlambda.Start(handler)\n}\n"
-                        }
-                    ],
-                    "id": "781a591b-215a-4329-9df1-bfc4dfab2c8a",
-                    "name": "SQL Injection via Tainted String",
-                    "shortDescription": "User-provided input is concatenated into SQL statements, enabling SQL injection that can expose or modify database contents.",
-                    "description": "**Manual SQL string concatenation** with untrusted input in functions like `db.Query` and `db.Exec` can lead to SQL injection. In the provided Go code, `searchCriteria` and `request.Get(\"Id\")` are directly embedded into SQL statements without parameter binding or sanitization. An attacker can inject SQL fragments to read, modify, or delete database records. This vulnerability can result in **unauthorized data access**, **data modification**, or **denial of service** if arbitrary SQL commands are executed.",
-                    "howToPrevent": "- Use **parameterized queries** or **prepared statements** instead of string concatenation. Pass all untrusted input as parameters:\r\n  ```go\r\n  // Safe query with placeholder\r\n  query := `SELECT e.emp_no, e.first_name, e.last_name FROM employees e WHERE e.last_name LIKE ?`\r\n  rows, err := db.Query(query, searchCriteria+\"%\")\r\n  ```\r\n- For DELETE operations:\r\n  ```go\r\n  stmt, err := db.Prepare(`DELETE FROM table WHERE Id = ?`)\r\n  _, err = stmt.Exec(id)\r\n  ```\r\n- Adopt a database abstraction or ORM (e.g., GORM, sqlx) that enforces parameter binding by default.\r\n- Validate and sanitize input formats (e.g., ensure numeric IDs are parsed to integers before use).",
-                    "severity": "CRITICAL",
-                    "language": "Go",
-                    "vulnerabilityType": "sast",
-                    "cvss3": {
-                        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-                        "baseScore": "9.8"
-                    },
-                    "_cvss3": "cvss3",
-                    "sourceMetadata": {
-                        "subcategory": [
-                            "vuln"
-                        ],
-                        "technology": [
-                            "aws-lambda"
-                        ],
-                        "languages": [
-                            "Go"
-                        ],
-                        "category": "security",
-                        "confidence": "MEDIUM",
-                        "impact": "MEDIUM",
-                        "likelihood": "HIGH"
-                    },
-                    "_sourceMetadata": "sourceMetadata"
-                },
-                "historyItems": {
-                    "items": []
-                },
-                "vulnerabilityType": "sast"
+        "vulnerability": "sast",
+        "dataflow": [
+            {
+                "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/brute/index.php",
+                "category": "ENTRY_POINT",
+                "ligne": 43,
+                "explication": "Formulaire HTML exposé via interface web DVWA permettant la saisie utilisateur",
+                "variables": "username (input field)"
+            },
+            {
+                "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/brute/source/low.php",
+                "category": "SOURCE",
+                "ligne": 5,
+                "explication": "Récupération directe de l'input utilisateur via $_GET sans validation",
+                "variables": "$user = $_GET['username']"
+            },
+            {
+                "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/brute/source/low.php",
+                "category": "SINK",
+                "ligne": 12,
+                "explication": "Injection directe de la variable utilisateur dans la requête SQL",
+                "variables": "$user dans la requête SQL"
             }
-        },
-        "vulnerability": "sast"
+        ],
+        "vulnerability_truth": {
+            "statut": "TP",
+            "explication": "Cette vulnérabilité est un vrai positif. L'input utilisateur provenant de $_GET['username'] est directement injecté dans une requête SQL sans aucune sanitisation ou utilisation de requêtes préparées. Un attaqueur peut exploiter cette faille en injectant du code SQL malveillant via le paramètre username. L'application est accessible via l'interface web DVWA, rendant cette vulnérabilité exploitable."
+        }
     },
     {
         "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
@@ -348,61 +179,6 @@
                         "fixAnalysisDescription": ""
                     }
                 ],
-                "dataflow": [
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/index.php",
-                        "category": "ENTRY_POINT",
-                        "ligne": 39,
-                        "explication": "Formulaire HTML exposé via interface web DVWA pour saisie d'adresse IP",
-                        "variables": "ip (input field)"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/source/impossible.php",
-                        "category": "SOURCE",
-                        "ligne": 8,
-                        "explication": "Récupération de l'input utilisateur via $_REQUEST",
-                        "variables": "$target = $_REQUEST['ip']"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/source/impossible.php",
-                        "category": "SANITIZATION",
-                        "ligne": 9,
-                        "explication": "Application de stripslashes pour enlever les backslashes",
-                        "variables": "$target = stripslashes($target)"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/source/impossible.php",
-                        "category": "VALIDATION",
-                        "ligne": 12,
-                        "explication": "Division de l'IP en octets pour validation",
-                        "variables": "$octet = explode('.', $target)"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/source/impossible.php",
-                        "category": "STRICT_VALIDATION",
-                        "ligne": 15,
-                        "explication": "Validation stricte: chaque octet doit être numérique et exactement 4 octets",
-                        "variables": "is_numeric() sur chaque $octet[0-3]"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/source/impossible.php",
-                        "category": "RECONSTRUCTION",
-                        "ligne": 17,
-                        "explication": "Reconstruction de l'IP uniquement avec des valeurs validées numériques",
-                        "variables": "$target = $octet[0] . '.' . $octet[1] . '.' . $octet[2] . '.' . $octet[3]"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/source/impossible.php",
-                        "category": "SINK",
-                        "ligne": 22,
-                        "explication": "Exécution shell avec variable validée contenant uniquement des chiffres et points",
-                        "variables": "$target dans shell_exec()"
-                    }
-                ],
-                "vulnerability_truth": {
-                    "statut": "FP",
-                    "explication": "Cette vulnérabilité est un faux positif. Bien que le scanner détecte une concaténation directe dans shell_exec(), le code implémente une validation stricte qui divise l'adresse IP en 4 octets et vérifie que chaque octet est numérique avec is_numeric(). Cette validation empêche totalement l'injection de commandes shell car seuls des caractères numériques et des points peuvent être présents dans la variable $target finale. L'injection de caractères spéciaux comme ';', '&', '|' ou '`' est impossible."
-                },
                 "id": "1ef7e3ff-9022-418c-ada8-3283b726b599",
                 "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
                 "createdAt": "2025-07-31T11:00:15.000Z",
@@ -475,174 +251,62 @@
                 "vulnerabilityType": "sast"
             }
         },
-        "vulnerability": "sast"
-    },
-    {
-        "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
-        "vulnerabilityId": "857569f9-1af6-4a8a-96ad-c5642a30a9b4",
-        "sast": {
-            "base": {
-                "codeSnippets": [
-                    {
-                        "code": [
-                            {
-                                "line": 48,
-                                "content": "\tprivate function executeSystemCommand($command) {\r"
-                            },
-                            {
-                                "line": 49,
-                                "content": "\t\treturn shell_exec($command);\r"
-                            },
-                            {
-                                "line": 50,
-                                "content": "\t}\r"
-                            }
-                        ],
-                        "id": "netdiag-exec-001",
-                        "vulnerableStartLine": 49,
-                        "vulnerableEndLine": 49,
-                        "startLine": 48,
-                        "endLine": 50,
-                        "language": "PHP",
-                        "fixAnalysis": "",
-                        "fixAnalysisDescription": ""
-                    }
-                ],
-                "dataflow": [
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/netdiag/index.php",
-                        "category": "ENTRY_POINT",
-                        "ligne": 41,
-                        "explication": "Formulaire HTML exposé via interface web DVWA pour diagnostic réseau",
-                        "variables": "host (input field)"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/netdiag/source/low.php",
-                        "category": "SOURCE",
-                        "ligne": 8,
-                        "explication": "Récupération de l'input utilisateur via $_POST",
-                        "variables": "'host' => $_POST['host']"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/netdiag/includes/request_handler.php",
-                        "category": "PROPAGATION",
-                        "ligne": 15,
-                        "explication": "Transmission vers processNetworkRequest",
-                        "variables": "$request_data['host']"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/netdiag/includes/request_handler.php",
-                        "category": "METADATA_INJECTION",
-                        "ligne": 27,
-                        "explication": "Extraction discrète de métadonnées client incluant HTTP_X_ADMIN_PARAMS",
-                        "variables": "$_SERVER['HTTP_USER_AGENT'], $_SERVER['HTTP_X_ADMIN_PARAMS']"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/netdiag/includes/diagnostic_manager.php",
-                        "category": "CONDITION_CHECK",
-                        "ligne": 35,
-                        "explication": "Vérification User-Agent contenant 'Admin-Tool' pour activation mode admin",
-                        "variables": "strpos($client_data['user_agent'], 'Admin-Tool')"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/netdiag/includes/diagnostic_manager.php",
-                        "category": "HIDDEN_INJECTION",
-                        "ligne": 42,
-                        "explication": "Extraction de paramètres admin depuis header HTTP_X_ADMIN_PARAMS",
-                        "variables": "$_SERVER['HTTP_X_ADMIN_PARAMS']"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/netdiag/includes/command_executor.php",
-                        "category": "COMMAND_BUILD",
-                        "ligne": 35,
-                        "explication": "Construction de commande avec concaténation des paramètres admin non validés",
-                        "variables": "$command . ' ' . $admin_params"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/netdiag/includes/command_executor.php",
-                        "category": "SINK",
-                        "ligne": 49,
-                        "explication": "Exécution shell de la commande avec paramètres injectés",
-                        "variables": "$command dans shell_exec()"
-                    }
-                ],
-                "vulnerability_truth": {
-                    "statut": "TP",
-                    "explication": "Cette vulnérabilité est un vrai positif avec un dataflow complexe et discret. L'injection se fait via le header HTTP 'HTTP_X_ADMIN_PARAMS' lorsque le User-Agent contient 'Admin-Tool'. La donnée malveillante transite par 5 fichiers avant d'atteindre shell_exec(). La vulnérabilité est accessible en envoyant une requête avec : User-Agent: Admin-Tool et X-Admin-Params: ; malicious_command. Le flux complexe rend cette injection difficile à détecter car elle ne passe pas par les paramètres POST classiques mais par des headers HTTP spécifiques."
-                },
-                "id": "857569f9-1af6-4a8a-96ad-c5642a30a9b4",
-                "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
-                "createdAt": "2025-07-31T11:00:15.000Z",
-                "updateAt": "2025-07-31T11:00:15.000Z",
-                "timeToFix": "",
-                "currentState": "to_verify",
-                "currentSeverity": "CRITICAL",
-                "currentPriority": "critical_urgent",
-                "contextualExplanation": "",
-                "language": "PHP",
-                "path": "DVWA-master/vulnerabilities/netdiag/includes/command_executor.php",
-                "vulnerableStartLine": 49,
-                "vulnerableEndLine": 49,
-                "vulnerability": {
-                    "cwe": [
-                        "CWE-78"
-                    ],
-                    "owaspTop10": [
-                        "A03:2021 - Injection"
-                    ],
-                    "cweArray": [
-                        "CWE-78"
-                    ],
-                    "references": [
-                        {
-                            "id": "1f948257-c3c7-4b1f-bc4c-042193eac305",
-                            "name": "OWASP Top 10 A03:2021 - Injection",
-                            "url": "https://owasp.org/Top10/A03_2021-Injection"
-                        }
-                    ],
-                    "codeExamples": [
-                        {
-                            "filename": "tainted-exec.php",
-                            "content": "<?php\n\n$userinput = $_GET['userinput'];\n\n// ruleid: tainted-exec\nsystem(\"ls $userinput\");\n\n$escaped = escapeshellarg($userinput);\n// ok: tainted-exec\nsystem(\"ls $escaped\");\n\n$descriptors = [[\"pipe\", \"r\"], [\"pipe\", \"w\"], [\"pipe\", \"w\"]];\n$pipes = [];\n\n// ruleid: tainted-exec\n$p = proc_open(\"ls $userinput\", $descriptors, $pipes);\necho stream_get_contents($pipes[1]);\n\n// ok: tainted-exec\n$p = proc_open([\"ls\", $userinput], $descriptors, $pipes);\necho stream_get_contents($pipes[1]);\n"
-                        }
-                    ],
-                    "id": "286cf5ce-2e9b-4cb8-b85f-79be538026f9",
-                    "name": "Shell Command Injection",
-                    "shortDescription": "Unsanitized user input passed to PHP shell execution functions allows arbitrary command execution.",
-                    "description": "This vulnerability occurs when **user input** is concatenated directly into a shell command passed to functions like `system()` or `proc_open()`. An attacker can inject arbitrary shell operators or commands (for example, `; rm -rf /`), resulting in **remote code execution** with the privileges of the web server. The flaw stems from lack of **input validation** and **command argument separation**, allowing untrusted data to alter the intended command structure. Successful exploitation can compromise system confidentiality, integrity, and availability, enabling data exfiltration, file manipulation, or service disruption.",
-                    "howToPrevent": "To prevent shell command injection:\r\n\r\n* **Validate and sanitize input**: Enforce a whitelist of allowed characters or patterns.\r\n* **Escape shell arguments**: Use `escapeshellarg()` or `escapeshellcmd()` to quote or escape user input.\r\n* **Use array-based APIs**: For `proc_open()` and `exec()`, pass command and arguments as an array to avoid shell interpretation.\r\n* **Avoid shell invocation**: When possible, use native functions (e.g., `scandir()` for directory listings) instead of shell commands.\r\n\r\nExample:\r\n```php\r\n$userinput = $_GET['userinput'];\r\n$safeArg = escapeshellarg($userinput);\r\n// Safe: argument is quoted\r\nsystem(\"ls {$safeArg}\");\r\n\r\n// Array form for proc_open\r\nproc_open([\"ls\", $userinput], $descriptors, $pipes);\r\n```",
-                    "severity": "CRITICAL",
-                    "language": "PHP",
-                    "vulnerabilityType": "sast",
-                    "cvss3": {
-                        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-                        "baseScore": "9.8"
-                    },
-                    "_cvss3": "cvss3",
-                    "sourceMetadata": {
-                        "subcategory": [
-                            "vuln"
-                        ],
-                        "technology": [
-                            "php"
-                        ],
-                        "languages": [
-                            "PHP"
-                        ],
-                        "category": "security",
-                        "confidence": "MEDIUM",
-                        "impact": "HIGH",
-                        "likelihood": "MEDIUM"
-                    },
-                    "_sourceMetadata": "sourceMetadata"
-                },
-                "historyItems": {
-                    "items": []
-                },
-                "vulnerabilityType": "sast"
+        "vulnerability": "sast",
+        "dataflow": [
+            {
+                "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/index.php",
+                "category": "ENTRY_POINT",
+                "ligne": 39,
+                "explication": "Formulaire HTML exposé via interface web DVWA pour saisie d'adresse IP",
+                "variables": "ip (input field)"
+            },
+            {
+                "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/source/impossible.php",
+                "category": "SOURCE",
+                "ligne": 8,
+                "explication": "Récupération de l'input utilisateur via $_REQUEST",
+                "variables": "$target = $_REQUEST['ip']"
+            },
+            {
+                "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/source/impossible.php",
+                "category": "SANITIZATION",
+                "ligne": 9,
+                "explication": "Application de stripslashes pour enlever les backslashes",
+                "variables": "$target = stripslashes($target)"
+            },
+            {
+                "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/source/impossible.php",
+                "category": "VALIDATION",
+                "ligne": 12,
+                "explication": "Division de l'IP en octets pour validation",
+                "variables": "$octet = explode('.', $target)"
+            },
+            {
+                "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/source/impossible.php",
+                "category": "STRICT_VALIDATION",
+                "ligne": 15,
+                "explication": "Validation stricte: chaque octet doit être numérique et exactement 4 octets",
+                "variables": "is_numeric() sur chaque $octet[0-3]"
+            },
+            {
+                "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/source/impossible.php",
+                "category": "RECONSTRUCTION",
+                "ligne": 17,
+                "explication": "Reconstruction de l'IP uniquement avec des valeurs validées numériques",
+                "variables": "$target = $octet[0] . '.' . $octet[1] . '.' . $octet[2] . '.' . $octet[3]"
+            },
+            {
+                "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/source/impossible.php",
+                "category": "SINK",
+                "ligne": 22,
+                "explication": "Exécution shell avec variable validée contenant uniquement des chiffres et points",
+                "variables": "$target dans shell_exec()"
             }
-        },
-        "vulnerability": "sast"
+        ],
+        "vulnerability_truth": {
+            "statut": "FP",
+            "explication": "Cette vulnérabilité est un faux positif. Bien que le scanner détecte une concaténation directe dans shell_exec(), le code implémente une validation stricte qui divise l'adresse IP en 4 octets et vérifie que chaque octet est numérique avec is_numeric(). Cette validation empêche totalement l'injection de commandes shell car seuls des caractères numériques et des points peuvent être présents dans la variable $target finale. L'injection de caractères spéciaux comme ';', '&', '|' ou '`' est impossible."
+        }
     },
     {
         "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
@@ -683,40 +347,6 @@
                         "fixAnalysisDescription": ""
                     }
                 ],
-                "dataflow": [
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/index.php",
-                        "category": "ENTRY_POINT",
-                        "ligne": 39,
-                        "explication": "Formulaire HTML exposé via interface web DVWA pour saisie d'adresse IP",
-                        "variables": "ip (input field)"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/source/medium.php",
-                        "category": "SOURCE",
-                        "ligne": 5,
-                        "explication": "Récupération de l'input utilisateur via $_REQUEST",
-                        "variables": "$target = $_REQUEST['ip']"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/source/medium.php",
-                        "category": "INSUFFICIENT_SANITIZATION",
-                        "ligne": 14,
-                        "explication": "Application d'une blacklist partielle supprimant seulement '&&' et ';'",
-                        "variables": "$target = str_replace(array_keys($substitutions), $substitutions, $target)"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/source/medium.php",
-                        "category": "SINK",
-                        "ligne": 19,
-                        "explication": "Exécution shell avec variable insuffisamment sanitisée",
-                        "variables": "$target dans shell_exec()"
-                    }
-                ],
-                "vulnerability_truth": {
-                    "statut": "TP",
-                    "explication": "Cette vulnérabilité est un vrai positif. Bien qu'une blacklist soit appliquée, elle est insuffisante car elle ne filtre que '&&' et ';'. De nombreux autres caractères dangereux restent exploitables : pipe '|', backticks '`', substitution de commande '$()'. Un attaqueur peut facilement contourner cette protection avec des payloads comme '127.0.0.1 | whoami' ou '127.0.0.1 `cat /etc/passwd`', permettant l'exécution de commandes arbitraires."
-                },
                 "id": "200eaaf7-1d51-4eac-b753-1f7dffdffc8b",
                 "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
                 "createdAt": "2025-07-31T11:00:16.000Z",
@@ -789,146 +419,133 @@
                 "vulnerabilityType": "sast"
             }
         },
-        "vulnerability": "sast"
+        "vulnerability": "sast",
+        "dataflow": [
+            {
+                "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/index.php",
+                "category": "ENTRY_POINT",
+                "ligne": 39,
+                "explication": "Formulaire HTML exposé via interface web DVWA pour saisie d'adresse IP",
+                "variables": "ip (input field)"
+            },
+            {
+                "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/source/medium.php",
+                "category": "SOURCE",
+                "ligne": 5,
+                "explication": "Récupération de l'input utilisateur via $_REQUEST",
+                "variables": "$target = $_REQUEST['ip']"
+            },
+            {
+                "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/source/medium.php",
+                "category": "INSUFFICIENT_SANITIZATION",
+                "ligne": 14,
+                "explication": "Application d'une blacklist partielle supprimant seulement '&&' et ';'",
+                "variables": "$target = str_replace(array_keys($substitutions), $substitutions, $target)"
+            },
+            {
+                "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/exec/source/medium.php",
+                "category": "SINK",
+                "ligne": 19,
+                "explication": "Exécution shell avec variable insuffisamment sanitisée",
+                "variables": "$target dans shell_exec()"
+            }
+        ],
+        "vulnerability_truth": {
+            "statut": "TP",
+            "explication": "Cette vulnérabilité est un vrai positif. Bien qu'une blacklist soit appliquée, elle est insuffisante car elle ne filtre que '&&' et ';'. De nombreux autres caractères dangereux restent exploitables : pipe '|', backticks '`', substitution de commande '$()'. Un attaqueur peut facilement contourner cette protection avec des payloads comme '127.0.0.1 | whoami' ou '127.0.0.1 `cat /etc/passwd`', permettant l'exécution de commandes arbitraires."
+        }
     },
     {
         "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
-        "vulnerabilityId": "d965adc2-1c86-46cb-9187-3affc57c3b62",
+        "vulnerabilityId": "9a258e41-035b-41e0-8140-fe7d09cde353",
         "sast": {
             "base": {
                 "codeSnippets": [
                     {
                         "code": [
                             {
+                                "line": 39,
+                                "content": "    "
+                            },
+                            {
+                                "line": 40,
+                                "content": "    private function runCommand($command) {"
+                            },
+                            {
+                                "line": 41,
+                                "content": "        return shell_exec($command);"
+                            },
+                            {
                                 "line": 42,
-                                "content": "\tprivate function runCommand($command) {\r"
+                                "content": "    }"
                             },
                             {
                                 "line": 43,
-                                "content": "\t\treturn shell_exec($command);\r"
-                            },
-                            {
-                                "line": 44,
-                                "content": "\t}\r"
+                                "content": "}"
                             }
                         ],
-                        "id": "sysmon-exec-001",
-                        "vulnerableStartLine": 43,
-                        "vulnerableEndLine": 43,
-                        "startLine": 42,
-                        "endLine": 44,
+                        "id": "a6fb7059-059e-4620-953c-50a8f61477ff",
+                        "vulnerableStartLine": 41,
+                        "vulnerableEndLine": 41,
+                        "startLine": 39,
+                        "endLine": 43,
                         "language": "PHP",
                         "fixAnalysis": "",
                         "fixAnalysisDescription": ""
                     }
                 ],
-                "dataflow": [
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/sysmon/index.php",
-                        "category": "ENTRY_POINT",
-                        "ligne": 43,
-                        "explication": "Formulaire HTML exposé via interface web DVWA pour monitoring système",
-                        "variables": "target_param (input field)"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/sysmon/source/low.php",
-                        "category": "SOURCE",
-                        "ligne": 9,
-                        "explication": "Récupération de l'input utilisateur via $_POST",
-                        "variables": "'parameter' => $_POST['target_param']"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/sysmon/includes/monitor_controller.php",
-                        "category": "PROPAGATION",
-                        "ligne": 15,
-                        "explication": "Transmission vers executeMonitorCommand",
-                        "variables": "$request_info['parameter']"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/sysmon/includes/parameter_processor.php",
-                        "category": "SECURITY_PROCESSING",
-                        "ligne": 30,
-                        "explication": "Appel du filtre de sécurité pour sanitisation",
-                        "variables": "$this->security_filter->sanitizeParameter($parameter)"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/sysmon/includes/security_filter.php",
-                        "category": "COMPREHENSIVE_SANITIZATION",
-                        "ligne": 23,
-                        "explication": "Application de filtres robustes: suppression caractères dangereux, commandes interdites, substitution",
-                        "variables": "Filtrage via patterns regex et blacklist complète"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/sysmon/includes/command_dispatcher.php",
-                        "category": "COMMAND_VALIDATION",
-                        "ligne": 17,
-                        "explication": "Validation stricte: seules 4 commandes prédéfinies autorisées",
-                        "variables": "in_array($base_command, $this->safe_commands, true)"
-                    },
-                    {
-                        "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/sysmon/includes/command_dispatcher.php",
-                        "category": "SINK",
-                        "ligne": 43,
-                        "explication": "Exécution shell avec paramètre entièrement filtré et commande validée",
-                        "variables": "$command dans shell_exec()"
-                    }
-                ],
-                "vulnerability_truth": {
-                    "statut": "FP",
-                    "explication": "Cette vulnérabilité est un faux positif. Bien que le scanner détecte shell_exec(), le code implémente une sécurisation multicouche complexe : 1) Validation stricte des commandes de base (whitelist de 4 commandes), 2) Filtrage complet des paramètres via regex supprimant tous caractères dangereux (;|&`$(){}[]), 3) Blacklist des commandes dangereuses (rm, cat, wget, etc.), 4) Substitution des caractères restants. Cette défense en profondeur empêche totalement l'injection de commandes, rendant la vulnérabilité non exploitable malgré l'usage de shell_exec()."
-                },
-                "id": "d965adc2-1c86-46cb-9187-3affc57c3b62",
+                "id": "9a258e41-035b-41e0-8140-fe7d09cde353",
                 "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
-                "createdAt": "2025-07-31T11:00:16.000Z",
-                "updateAt": "2025-07-31T11:00:16.000Z",
+                "createdAt": "2025-08-02T22:26:39.000Z",
+                "updateAt": "2025-08-02T22:26:39.000Z",
                 "timeToFix": "",
                 "currentState": "to_verify",
-                "currentSeverity": "CRITICAL",
-                "currentPriority": "critical_urgent",
+                "currentSeverity": "HIGH",
+                "currentPriority": "urgent",
                 "contextualExplanation": "",
                 "language": "PHP",
-                "path": "DVWA-master/vulnerabilities/sysmon/includes/command_dispatcher.php",
-                "vulnerableStartLine": 43,
-                "vulnerableEndLine": 43,
+                "path": "php-dataset-dvwa/vulnerabilities/sysmon/includes/command_dispatcher.php",
+                "vulnerableStartLine": 41,
+                "vulnerableEndLine": 41,
                 "vulnerability": {
                     "cwe": [
-                        "CWE-78"
+                        "CWE-94"
                     ],
                     "owaspTop10": [
                         "A03:2021 - Injection"
                     ],
                     "cweArray": [
-                        "CWE-78"
+                        "CWE-94"
                     ],
                     "references": [
                         {
-                            "id": "1f948257-c3c7-4b1f-bc4c-042193eac305",
-                            "name": "OWASP Top 10 A03:2021 - Injection",
-                            "url": "https://owasp.org/Top10/A03_2021-Injection"
+                            "id": "e2921455-2b30-4392-b4d7-c0be76e6abba",
+                            "name": "PHP CodeSniffer Security Audit - SystemExecFunctionsSniff",
+                            "url": "https://github.com/FloeDesignTechnologies/phpcs-security-audit/blob/master/Security/Sniffs/BadFunctions/SystemExecFunctionsSniff.php"
                         }
                     ],
                     "codeExamples": [
                         {
-                            "filename": "tainted-exec.php",
-                            "content": "<?php\n\n$userinput = $_GET['userinput'];\n\n// ruleid: tainted-exec\nsystem(\"ls $userinput\");\n\n$escaped = escapeshellarg($userinput);\n// ok: tainted-exec\nsystem(\"ls $escaped\");\n\n$descriptors = [[\"pipe\", \"r\"], [\"pipe\", \"w\"], [\"pipe\", \"w\"]];\n$pipes = [];\n\n// ruleid: tainted-exec\n$p = proc_open(\"ls $userinput\", $descriptors, $pipes);\necho stream_get_contents($pipes[1]);\n\n// ok: tainted-exec\n$p = proc_open([\"ls\", $userinput], $descriptors, $pipes);\necho stream_get_contents($pipes[1]);\n"
+                            "filename": "exec-use.php",
+                            "content": "<?php\n\n// ruleid: exec-use\nexec($user_input);\n\n// ok: exec-use\nexec('whoami');\n\n// ruleid: exec-use\npassthru($user_input);\n\n// ruleid: exec-use\n$proc = proc_open($cmd, $descriptorspec, $pipes);\n\n// ruleid: exec-use\n$handle = popen($user_input, \"r\");\n\n// ruleid: exec-use\n$output = shell_exec($user_input);\n\n// ruleid: exec-use\n$output = system($user_input, $retval);\n\n// ruleid: exec-use\npcntl_exec($path);\n"
                         }
                     ],
-                    "id": "286cf5ce-2e9b-4cb8-b85f-79be538026f9",
-                    "name": "Shell Command Injection",
-                    "shortDescription": "Unsanitized user input passed to PHP shell execution functions allows arbitrary command execution.",
-                    "description": "This vulnerability occurs when **user input** is concatenated directly into a shell command passed to functions like `system()` or `proc_open()`. An attacker can inject arbitrary shell operators or commands (for example, `; rm -rf /`), resulting in **remote code execution** with the privileges of the web server. The flaw stems from lack of **input validation** and **command argument separation**, allowing untrusted data to alter the intended command structure. Successful exploitation can compromise system confidentiality, integrity, and availability, enabling data exfiltration, file manipulation, or service disruption.",
-                    "howToPrevent": "To prevent shell command injection:\r\n\r\n* **Validate and sanitize input**: Enforce a whitelist of allowed characters or patterns.\r\n* **Escape shell arguments**: Use `escapeshellarg()` or `escapeshellcmd()` to quote or escape user input.\r\n* **Use array-based APIs**: For `proc_open()` and `exec()`, pass command and arguments as an array to avoid shell interpretation.\r\n* **Avoid shell invocation**: When possible, use native functions (e.g., `scandir()` for directory listings) instead of shell commands.\r\n\r\nExample:\r\n```php\r\n$userinput = $_GET['userinput'];\r\n$safeArg = escapeshellarg($userinput);\r\n// Safe: argument is quoted\r\nsystem(\"ls {$safeArg}\");\r\n\r\n// Array form for proc_open\r\nproc_open([\"ls\", $userinput], $descriptors, $pipes);\r\n```",
-                    "severity": "CRITICAL",
+                    "id": "4bf27560-4e42-4953-8904-b9d63c40e892",
+                    "name": "Dynamic Command Execution",
+                    "shortDescription": "Use of non-constant commands in exec and related functions enables OS command injection by untrusted input.",
+                    "description": "This vulnerability arises when **untrusted input** is passed directly to **shell execution functions** such as `exec()`, `passthru()`, `system()`, `shell_exec()`, `popen()`, `proc_open()`, or `pcntl_exec()`. In the provided code example, calls like `exec($user_input)` or `shell_exec($user_input)` allow an attacker to inject arbitrary operating system commands. The root cause is lack of input **validation** and **escaping**, which permits injection of command delimiters, chained commands, or malicious payloads. Successful exploitation can lead to full system compromise, data theft, or denial of service by executing arbitrary commands with the privileges of the application process.",
+                    "howToPrevent": "1. **Validate and sanitize input**: Accept only known-safe characters or patterns. Use strict whitelists rather than blacklists.\r\n2. **Escape shell arguments**: Wrap each dynamic value with functions like `escapeshellarg()` or `escapeshellcmd()` when shell invocation is unavoidable.\r\n3. **Avoid shell invocation**: Prefer native functions or libraries (e.g., PHP’s built-in file or network functions) instead of launching a shell.\r\n4. **Use parameterized interfaces**: When interacting with external binaries or system commands, use APIs that separate code and data.\r\n5. **Principle of least privilege**: Run the PHP process with minimal OS privileges and in a restricted environment (e.g., chroot or container).\r\n\r\nExample fix:\r\n```php\r\n// Validate\r\nif (!preg_match('/^[a-zA-Z0-9_-]+$/', $user_input)) {\r\n  throw new InvalidArgumentException('Invalid input');\r\n}\r\n// Safe execution\r\n$escaped = escapeshellarg($user_input);\r\nexec(\"/usr/bin/safe-command $escaped\", $output, $status);\r\n```",
+                    "severity": "HIGH",
                     "language": "PHP",
                     "vulnerabilityType": "sast",
                     "cvss3": {
                         "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-                        "baseScore": "9.8"
+                        "baseScore": "7.2"
                     },
                     "_cvss3": "cvss3",
                     "sourceMetadata": {
                         "subcategory": [
-                            "vuln"
+                            "audit"
                         ],
                         "technology": [
                             "php"
@@ -937,9 +554,9 @@
                             "PHP"
                         ],
                         "category": "security",
-                        "confidence": "MEDIUM",
+                        "confidence": "LOW",
                         "impact": "HIGH",
-                        "likelihood": "MEDIUM"
+                        "likelihood": "LOW"
                     },
                     "_sourceMetadata": "sourceMetadata"
                 },
@@ -949,7 +566,62 @@
                 "vulnerabilityType": "sast"
             }
         },
-        "vulnerability": "sast"
+        "vulnerability": "sast",
+        "dataflow": [
+            {
+                "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/sysmon/index.php",
+                "category": "ENTRY_POINT",
+                "ligne": 43,
+                "explication": "Formulaire HTML exposé via interface web DVWA pour monitoring système",
+                "variables": "target_param (input field)"
+            },
+            {
+                "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/sysmon/source/low.php",
+                "category": "SOURCE",
+                "ligne": 9,
+                "explication": "Récupération de l'input utilisateur via $_POST",
+                "variables": "'parameter' => $_POST['target_param']"
+            },
+            {
+                "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/sysmon/includes/monitor_controller.php",
+                "category": "PROPAGATION",
+                "ligne": 15,
+                "explication": "Transmission vers executeMonitorCommand",
+                "variables": "$request_info['parameter']"
+            },
+            {
+                "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/sysmon/includes/parameter_processor.php",
+                "category": "SECURITY_PROCESSING",
+                "ligne": 30,
+                "explication": "Appel du filtre de sécurité pour sanitisation",
+                "variables": "$this->security_filter->sanitizeParameter($parameter)"
+            },
+            {
+                "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/sysmon/includes/security_filter.php",
+                "category": "COMPREHENSIVE_SANITIZATION",
+                "ligne": 23,
+                "explication": "Application de filtres robustes: suppression caractères dangereux, commandes interdites, substitution",
+                "variables": "Filtrage via patterns regex et blacklist complète"
+            },
+            {
+                "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/sysmon/includes/command_dispatcher.php",
+                "category": "COMMAND_VALIDATION",
+                "ligne": 17,
+                "explication": "Validation stricte: seules 4 commandes prédéfinies autorisées",
+                "variables": "in_array($base_command, $this->safe_commands, true)"
+            },
+            {
+                "file": "/Users/julienzammit/Documents/GitHub/php-dataset-dvwa/vulnerabilities/sysmon/includes/command_dispatcher.php",
+                "category": "SINK",
+                "ligne": 43,
+                "explication": "Exécution shell avec paramètre entièrement filtré et commande validée",
+                "variables": "$command dans shell_exec()"
+            }
+        ],
+        "vulnerability_truth": {
+            "statut": "FP",
+            "explication": "Cette vulnérabilité est un faux positif. Bien que le scanner détecte shell_exec(), le code implémente une sécurisation multicouche complexe : 1) Validation stricte des commandes de base (whitelist de 4 commandes), 2) Filtrage complet des paramètres via regex supprimant tous caractères dangereux (;|&`$(){}[]), 3) Blacklist des commandes dangereuses (rm, cat, wget, etc.), 4) Substitution des caractères restants. Cette défense en profondeur empêche totalement l'injection de commandes, rendant la vulnérabilité non exploitable malgré l'usage de shell_exec()."
+        }
     },
     {
         "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
@@ -1120,116 +792,6 @@
     },
     {
         "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
-        "vulnerabilityId": "68a3bb76-fb8f-496d-ba5f-a8974586f5c4",
-        "sast": {
-            "base": {
-                "codeSnippets": [
-                    {
-                        "code": [
-                            {
-                                "line": 42,
-                                "content": "        eval('?>' . $template_content . '<?php ');"
-                            }
-                        ],
-                        "id": "68a3bb76-fb8f-496d-ba5f-a8974586f5c4",
-                        "vulnerableStartLine": 42,
-                        "vulnerableEndLine": 42,
-                        "startLine": 42,
-                        "endLine": 42,
-                        "language": "PHP",
-                        "fixAnalysis": "",
-                        "fixAnalysisDescription": ""
-                    }
-                ],
-                "id": "68a3bb76-fb8f-496d-ba5f-a8974586f5c4",
-                "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
-                "createdAt": "2025-08-02T12:00:00.000Z",
-                "updateAt": "2025-08-02T12:00:00.000Z",
-                "timeToFix": "",
-                "currentState": "to_verify",
-                "currentSeverity": "CRITICAL",
-                "currentPriority": "critical_urgent",
-                "contextualExplanation": "",
-                "language": "PHP",
-                "path": "vulnerabilities/docviewer/includes/template_engine.php",
-                "vulnerableStartLine": 42,
-                "vulnerableEndLine": 42,
-                "vulnerability": {
-                    "cwe": [
-                        "CWE-78"
-                    ],
-                    "owaspTop10": [
-                        "A01:2017 - Injection",
-                        "A03:2021 - Injection"
-                    ],
-                    "cweArray": [
-                        "CWE-78"
-                    ],
-                    "name": "Unsafe eval() Usage",
-                    "shortDescription": "Use of eval() with non-constant input allows arbitrary PHP code execution.",
-                    "description": "In the provided code, **eval()** is invoked with a dynamic, non-constant argument. The **eval()** function interprets the string as PHP code at runtime. When attacker-controlled input reaches **eval()** without validation, it enables **arbitrary code execution**.",
-                    "severity": "CRITICAL",
-                    "language": "PHP",
-                    "vulnerabilityType": "sast"
-                },
-                "historyItems": {
-                    "items": []
-                },
-                "vulnerabilityType": "sast"
-            }
-        },
-        "vulnerability": "sast",
-        "dataflow": [
-            {
-                "file": "vulnerabilities/docviewer/index.php",
-                "category": "SOURCE",
-                "ligne": 18,
-                "explication": "Input utilisateur récupéré depuis $_POST['doc_section']",
-                "variables": "$_POST['doc_section']"
-            },
-            {
-                "file": "vulnerabilities/docviewer/includes/document_manager.php",
-                "category": "PROPAGATION",
-                "ligne": 18,
-                "explication": "Le paramètre section_name est passé à prepareRequestData",
-                "variables": "$section_name"
-            },
-            {
-                "file": "vulnerabilities/docviewer/includes/path_validator.php",
-                "category": "VALIDATION",
-                "ligne": 9,
-                "explication": "Validation de la requête avec vérification des patterns malveillants",
-                "variables": "$request_data"
-            },
-            {
-                "file": "vulnerabilities/docviewer/includes/content_processor.php",
-                "category": "SANITIZATION",
-                "ligne": 16,
-                "explication": "Sanitisation stricte avec regex supprimant tous les caractères non-alphanumériques",
-                "variables": "$section_name"
-            },
-            {
-                "file": "vulnerabilities/docviewer/includes/template_engine.php",
-                "category": "SECURITY_FILTER",
-                "ligne": 51,
-                "explication": "Filtrage de sécurité supprimant les fonctions dangereuses et le code PHP",
-                "variables": "$template_content"
-            },
-            {
-                "file": "vulnerabilities/docviewer/includes/template_engine.php",
-                "category": "SINK",
-                "ligne": 42,
-                "explication": "Utilisation d'eval() mais avec contenu préalablement filtré et sécurisé",
-                "variables": "$safe_content"
-            }
-        ],
-        "vulnerability_truth": {
-            "statut": "FP",
-            "explication": "Cette vulnérabilité est un FAUX POSITIF. Bien que eval() soit utilisé, plusieurs couches de sécurité empêchent l'exploitation : (1) PathValidator bloque les patterns malveillants (.., /, eval, etc.), (2) ContentProcessor applique une sanitisation stricte avec regex ne gardant que [a-zA-Z0-9_-], (3) SecurityFilter supprime toutes les fonctions dangereuses et balises PHP/script du contenu avant eval(). Le dataflow complexe sur 5 fichiers garantit qu'aucun contenu malveillant ne peut atteindre eval(). La validation realpath() empêche aussi le path traversal."
-        }
-    },
-    {
-        "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
         "vulnerabilityId": "6672ec80-898a-484b-bac7-a4eca0cc57b6",
         "sast": {
             "base": {
@@ -1386,187 +948,6 @@
         "vulnerability_truth": {
             "statut": "FP",
             "explication": "Cette vulnérabilité est un FAUX POSITIF. Bien que unlink() soit appelé avec une variable dérivée d'un input utilisateur, le chemin du fichier est sécurisé par plusieurs mécanismes : 1) Le nom de fichier est hashé avec md5(uniqid() + nom) rendant le chemin imprévisible, 2) Le répertoire de base est contrôlé par sys_get_temp_dir(), 3) L'attaquant ne peut pas contrôler directement le chemin final. Il s'agit du niveau 'impossible' qui implémente des protections robustes contre path traversal."
-        }
-    },
-    {
-        "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
-        "vulnerabilityId": "e42458e2-41c5-4481-a409-b121c424894f",
-        "sast": {
-            "base": {
-                "codeSnippets": [
-                    {
-                        "code": [
-                            {
-                                "line": 44,
-                                "content": "    private function deleteFile($file_path) {\r"
-                            },
-                            {
-                                "line": 45,
-                                "content": "        if (file_exists($file_path)) {\r"
-                            },
-                            {
-                                "line": 46,
-                                "content": "            return unlink($file_path);\r"
-                            },
-                            {
-                                "line": 47,
-                                "content": "        }\r"
-                            },
-                            {
-                                "line": 48,
-                                "content": "        return false;\r"
-                            }
-                        ],
-                        "id": "e42458e2-41c5-4481-a409-b121c424894f",
-                        "vulnerableStartLine": 46,
-                        "vulnerableEndLine": 46,
-                        "startLine": 44,
-                        "endLine": 48,
-                        "language": "PHP",
-                        "fixAnalysis": "",
-                        "fixAnalysisDescription": ""
-                    }
-                ],
-                "id": "e42458e2-41c5-4481-a409-b121c424894f",
-                "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
-                "createdAt": "2025-08-02T15:30:00.000Z",
-                "updateAt": "2025-08-02T15:30:00.000Z",
-                "timeToFix": "",
-                "currentState": "to_verify",
-                "currentSeverity": "CRITICAL",
-                "currentPriority": "critical_urgent",
-                "contextualExplanation": "",
-                "language": "PHP",
-                "path": "DVWA-master/vulnerabilities/filemanager/includes/operation_handler.php",
-                "vulnerableStartLine": 46,
-                "vulnerableEndLine": 46,
-                "vulnerability": {
-                    "cwe": [
-                        "CWE-22"
-                    ],
-                    "owaspTop10": [
-                        "A05:2017 - Broken Access Control",
-                        "A01:2021 - Broken Access Control"
-                    ],
-                    "cweArray": [
-                        "CWE-22"
-                    ],
-                    "references": [
-                        {
-                            "id": "810130cc-b90a-418f-a5dc-41dd03465561",
-                            "name": "OWASP Broken Access Control",
-                            "url": "https://owasp.org/www-project-top-ten/2017/A5_2017-Broken_Access_Control.html"
-                        },
-                        {
-                            "id": "e91eb5b9-2679-4daa-82f2-9d01e8084b04",
-                            "name": "PHP unlink function documentation",
-                            "url": "https://www.php.net/manual/en/function.unlink"
-                        }
-                    ],
-                    "codeExamples": [
-                        {
-                            "filename": "unlink-use.php",
-                            "content": "<?php\n\n$data = $_GET[\"data\"];\n// ruleid: unlink-use\nunlink(\"/storage/\" . $data . \"/test\");\n\n// ok: unlink-use\nunlink('/storage/foobar/test');\n"
-                        }
-                    ],
-                    "id": "b14d29e7-1c7c-4adb-a154-178f9ba180fd",
-                    "name": "Improper File Deletion via unlink()",
-                    "shortDescription": "Unsanitized user input in unlink() allows attackers to delete unauthorized files under the storage directory.",
-                    "description": "The code calls **unlink()** with a path constructed from user-supplied input without validation. An attacker can inject a relative path (e.g., `../../`) in `data` to break out of the intended `/storage/` directory, causing deletion of arbitrary files. This flaw stems from failure to enforce **path canonicalization** and **access control** on the file path. Impact includes unauthorized file removal leading to data loss or service disruption.",
-                    "howToPrevent": "- **Validate and sanitize input**: use a strict allowlist of filenames or patterns and reject unexpected characters (e.g., `..`, `/`).\r\n- **Canonicalize paths**: apply `realpath()` after concatenation and verify that the result starts with the intended base directory.\r\n- **Enforce access checks**: ensure the application user has permission to delete only specified files.\r\n- **Avoid direct use of user input**: use fixed directory references or generate file paths on the server side.",
-                    "severity": "CRITICAL",
-                    "language": "PHP",
-                    "vulnerabilityType": "sast",
-                    "cvss3": {
-                        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:H",
-                        "baseScore": "9.1"
-                    },
-                    "_cvss3": "cvss3",
-                    "sourceMetadata": {
-                        "subcategory": [
-                            "audit"
-                        ],
-                        "technology": [
-                            "php"
-                        ],
-                        "languages": [
-                            "PHP"
-                        ],
-                        "category": "security",
-                        "confidence": "LOW",
-                        "impact": "MEDIUM",
-                        "likelihood": "LOW"
-                    },
-                    "_sourceMetadata": "sourceMetadata"
-                },
-                "historyItems": {
-                    "items": []
-                },
-                "vulnerabilityType": "sast"
-            }
-        },
-        "vulnerability": "sast",
-        "dataflow": [
-            {
-                "file": "vulnerabilities/filemanager/index.php",
-                "category": "SOURCE",
-                "ligne": 17,
-                "explication": "Input utilisateur via $_POST['file_path'] depuis le formulaire",
-                "variables": "$_POST['file_path']"
-            },
-            {
-                "file": "vulnerabilities/filemanager/includes/storage_controller.php",
-                "category": "PROPAGATION",
-                "ligne": 18,
-                "explication": "La variable file_path est passée à handleFileOperation()",
-                "variables": "$file_path"
-            },
-            {
-                "file": "vulnerabilities/filemanager/includes/storage_controller.php",
-                "category": "TRANSFORMATION",
-                "ligne": 26,
-                "explication": "Construction de operation_config avec target contenant le chemin utilisateur",
-                "variables": "$operation_config['target']"
-            },
-            {
-                "file": "vulnerabilities/filemanager/includes/operation_handler.php",
-                "category": "PROPAGATION",
-                "ligne": 15,
-                "explication": "La configuration est passée à resolveTargetPaths()",
-                "variables": "$config"
-            },
-            {
-                "file": "vulnerabilities/filemanager/includes/path_resolver.php",
-                "category": "PROPAGATION",
-                "ligne": 14,
-                "explication": "target_pattern récupère la valeur utilisateur non validée",
-                "variables": "$target_pattern"
-            },
-            {
-                "file": "vulnerabilities/filemanager/includes/path_resolver.php",
-                "category": "TRANSFORMATION",
-                "ligne": 17,
-                "explication": "buildDirectPath concatène base_dir et user input sans validation",
-                "variables": "$relative_path"
-            },
-            {
-                "file": "vulnerabilities/filemanager/includes/pattern_processor.php",
-                "category": "FAILLE_CACHEE",
-                "ligne": 42,
-                "explication": "Header X-File-Context peut remplacer le pattern avec du base64 décodé",
-                "variables": "$context_path"
-            },
-            {
-                "file": "vulnerabilities/filemanager/includes/operation_handler.php",
-                "category": "SINK",
-                "ligne": 46,
-                "explication": "unlink() appelé avec chemin contrôlé par l'utilisateur via path traversal",
-                "variables": "$file_path"
-            }
-        ],
-        "vulnerability_truth": {
-            "statut": "TP",
-            "explication": "Cette vulnérabilité est un VRAI POSITIF. Le dataflow complexe sur 5 fichiers permet à un attaquant de contrôler le chemin passé à unlink() de plusieurs façons : 1) Via $_POST['file_path'] avec path traversal (ex: ../../../etc/passwd), 2) Via le header HTTP 'X-File-Context' contenant un chemin base64 encodé qui remplace le pattern dans PatternProcessor. Le chemin n'est jamais validé et permet la suppression de fichiers arbitraires sur le système. L'attaquant peut exploiter cette faille via le formulaire web ou en envoyant des requêtes avec des headers malveillants."
         }
     },
     {
@@ -1733,175 +1114,6 @@
     },
     {
         "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
-        "vulnerabilityId": "d2f7a66b-e555-4a17-a344-9c13aa66ce04",
-        "sast": {
-            "base": {
-                "codeSnippets": [
-                    {
-                        "code": [
-                            {
-                                "line": 38,
-                                "content": "        global $sqlite_db_connection;\r"
-                            },
-                            {
-                                "line": 39,
-                                "content": "\r"
-                            },
-                            {
-                                "line": 40,
-                                "content": "        $query = \"SELECT first_name, last_name FROM users WHERE user_id = '$parameters[0]';\";\r"
-                            },
-                            {
-                                "line": 41,
-                                "content": "\r"
-                            },
-                            {
-                                "line": 42,
-                                "content": "        $stmt = $sqlite_db_connection->prepare($query_template);\r"
-                            }
-                        ],
-                        "id": "d2f7a66b-e555-4a17-a344-9c13aa66ce04",
-                        "vulnerableStartLine": 40,
-                        "vulnerableEndLine": 40,
-                        "startLine": 38,
-                        "endLine": 42,
-                        "language": "PHP",
-                        "fixAnalysis": "",
-                        "fixAnalysisDescription": ""
-                    }
-                ],
-                "id": "d2f7a66b-e555-4a17-a344-9c13aa66ce04",
-                "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
-                "createdAt": "2025-08-02T16:00:00.000Z",
-                "updateAt": "2025-08-02T16:00:00.000Z",
-                "timeToFix": "",
-                "currentState": "to_verify",
-                "currentSeverity": "CRITICAL",
-                "currentPriority": "critical_urgent",
-                "contextualExplanation": "",
-                "language": "PHP",
-                "path": "DVWA-master/vulnerabilities/profileanalyzer/includes/database_adapter.php",
-                "vulnerableStartLine": 40,
-                "vulnerableEndLine": 40,
-                "vulnerability": {
-                    "cwe": [
-                        "CWE-89"
-                    ],
-                    "owaspTop10": [
-                        "A01:2017 - Injection",
-                        "A03:2021 - Injection"
-                    ],
-                    "cweArray": [
-                        "CWE-89"
-                    ],
-                    "references": [
-                        {
-                            "id": "05092a4b-88d2-4d21-a61b-c56a5be1a19e",
-                            "name": "SQL Injection - OWASP Community",
-                            "url": "https://owasp.org/www-community/attacks/SQL_Injection"
-                        }
-                    ],
-                    "codeExamples": [
-                        {
-                            "filename": "tainted-sql-string.go",
-                            "content": "<?php\n\n$data = $_GET[\"data\"];\n// ruleid: tainted-sql-string\n$query = \"SELECT * FROM users WHERE id = '$data'\";\n\n// ok: tainted-sql-string\n$query = \"SELECT * FROM users WHERE id = ?\";\n"
-                        }
-                    ],
-                    "id": "781a591b-215a-4329-9df1-bfc4dfab2c8a",
-                    "name": "SQL Injection via Tainted String",
-                    "shortDescription": "User-provided input is concatenated into SQL statements, enabling SQL injection that can expose or modify database contents.",
-                    "description": "**Manual SQL string concatenation** with untrusted input in functions like `db.Query` and `db.Exec` can lead to SQL injection. In the provided Go code, `searchCriteria` and `request.Get(\"Id\")` are directly embedded into SQL statements without parameter binding or sanitization. An attacker can inject SQL fragments to read, modify, or delete database records. This vulnerability can result in **unauthorized data access**, **data modification**, or **denial of service** if arbitrary SQL commands are executed.",
-                    "howToPrevent": "- Use **parameterized queries** or **prepared statements** instead of string concatenation. Pass all untrusted input as parameters:\r\n  ```go\r\n  // Safe query with placeholder\r\n  query := `SELECT e.emp_no, e.first_name, e.last_name FROM employees e WHERE e.last_name LIKE ?`\r\n  rows, err := db.Query(query, searchCriteria+\"%\")\r\n  ```\r\n- For DELETE operations:\r\n  ```go\r\n  stmt, err := db.Prepare(`DELETE FROM table WHERE Id = ?`)\r\n  _, err = stmt.Exec(id)\r\n  ```\r\n- Adopt a database abstraction or ORM (e.g., GORM, sqlx) that enforces parameter binding by default.\r\n- Validate and sanitize input formats (e.g., ensure numeric IDs are parsed to integers before use).",
-                    "severity": "CRITICAL",
-                    "language": "Go",
-                    "vulnerabilityType": "sast",
-                    "cvss3": {
-                        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-                        "baseScore": "9.8"
-                    },
-                    "_cvss3": "cvss3",
-                    "sourceMetadata": {
-                        "subcategory": [
-                            "vuln"
-                        ],
-                        "technology": [
-                            "aws-lambda"
-                        ],
-                        "languages": [
-                            "Go"
-                        ],
-                        "category": "security",
-                        "confidence": "MEDIUM",
-                        "impact": "MEDIUM",
-                        "likelihood": "HIGH"
-                    },
-                    "_sourceMetadata": "sourceMetadata"
-                },
-                "historyItems": {
-                    "items": []
-                },
-                "vulnerabilityType": "sast"
-            }
-        },
-        "vulnerability": "sast",
-        "dataflow": [
-            {
-                "file": "vulnerabilities/profileanalyzer/index.php",
-                "category": "SOURCE",
-                "ligne": 17,
-                "explication": "Input utilisateur via $_POST['user_identifier'] depuis le formulaire",
-                "variables": "$_POST['user_identifier']"
-            },
-            {
-                "file": "vulnerabilities/profileanalyzer/includes/profile_manager.php",
-                "category": "PROPAGATION",
-                "ligne": 18,
-                "explication": "La variable user_identifier est passée à performAnalysis()",
-                "variables": "$user_identifier"
-            },
-            {
-                "file": "vulnerabilities/profileanalyzer/includes/profile_manager.php",
-                "category": "VALIDATION_MULTICOUCHE",
-                "ligne": 23,
-                "explication": "Validation stricte via IdentifierValidator avec patterns et blacklist",
-                "variables": "$processed_request"
-            },
-            {
-                "file": "vulnerabilities/profileanalyzer/includes/request_processor.php",
-                "category": "SANITISATION",
-                "ligne": 21,
-                "explication": "Processing avec intval() pour numérique et htmlspecialchars() pour strings",
-                "variables": "$processed_identifier"
-            },
-            {
-                "file": "vulnerabilities/profileanalyzer/includes/query_builder.php",
-                "category": "TEMPLATE_SECURISE",
-                "ligne": 12,
-                "explication": "Utilisation de templates avec placeholders préparés",
-                "variables": "$query_template"
-            },
-            {
-                "file": "vulnerabilities/profileanalyzer/includes/database_adapter.php",
-                "category": "PREPARED_STATEMENT",
-                "ligne": 42,
-                "explication": "Prepared statement avec bindValue() - la ligne 40 avec concaténation n'est jamais exécutée",
-                "variables": "$stmt"
-            },
-            {
-                "file": "vulnerabilities/profileanalyzer/includes/database_adapter.php",
-                "category": "EXECUTION_SECURISEE",
-                "ligne": 47,
-                "explication": "Execution du prepared statement avec paramètres liés",
-                "variables": "$result"
-            }
-        ],
-        "vulnerability_truth": {
-            "statut": "FP",
-            "explication": "Cette vulnérabilité est un FAUX POSITIF. Bien que la ligne 40 contienne une concaténation SQL apparemment vulnérable, cette ligne n'est jamais exécutée et semble être du code mort ou un artifact. Le vrai flux d'exécution utilise des prepared statements sécurisés : 1) Validation multicouche avec patterns regex et blacklist de mots SQL, 2) Sanitisation avec intval() et htmlspecialchars(), 3) Templates avec placeholders, 4) Prepared statements avec bindValue(). Les données utilisateur sont entièrement isolées de la structure SQL. L'exploitation est impossible grâce aux multiples couches de sécurité."
-        }
-    },
-    {
-        "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
         "vulnerabilityId": "0de6888b-4717-4ca5-8501-dba65cb44ab2",
         "sast": {
             "base": {
@@ -2008,205 +1220,37 @@
                 "historyItems": {
                     "items": []
                 },
-                "vulnerabilityType": "sast",
-                "dataflow": [
-                    {
-                        "file": "vulnerabilities/fi/source/high.php",
-                        "category": "SOURCE",
-                        "ligne": 4,
-                        "explication": "Variable $file initialisée avec l'entrée utilisateur $_GET['page']",
-                        "variables": "$file"
-                    },
-                    {
-                        "file": "vulnerabilities/fi/source/high.php",
-                        "category": "VALIDATION",
-                        "ligne": 7,
-                        "explication": "Validation fnmatch() facilement contournable avec des chemins comme file../../../etc/passwd",
-                        "variables": "$file"
-                    },
-                    {
-                        "file": "vulnerabilities/fi/index.php",
-                        "category": "SINK",
-                        "ligne": 31,
-                        "explication": "Utilisation de la variable $file dans include() permettant l'inclusion de fichiers arbitraires",
-                        "variables": "$file"
-                    }
-                ],
-                "vulnerability_truth": {
-                    "statut": "TP",
-                    "explication": "Vrai positif - La validation fnmatch() peut être contournée avec des chemins comme file../../../etc/passwd, permettant l'inclusion de fichiers arbitraires via include($file)"
-                }
+                "vulnerabilityType": "sast"
             }
         },
-        "vulnerability": "sast"
-    },
-    {
-        "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
-        "vulnerabilityId": "1de6888b-4717-4ca5-8501-dba65cb44ab3",
-        "sast": {
-            "base": {
-                "codeSnippets": [
-                    {
-                        "code": [
-                            {
-                                "line": 8,
-                                "content": "    public function checkAndClean($file_path) {\r"
-                            },
-                            {
-                                "line": 9,
-                                "content": "        if( !fnmatch( \"file*\", $file_path ) && $file_path != \"include.php\" ) {\r"
-                            },
-                            {
-                                "line": 10,
-                                "content": "            return false;\r"
-                            },
-                            {
-                                "line": 11,
-                                "content": "        }\r"
-                            },
-                            {
-                                "line": 12,
-                                "content": "        \r"
-                            }
-                        ],
-                        "id": "b9270a21-e756-4ed4-b82e-ac17c6e2e11c",
-                        "vulnerableStartLine": 9,
-                        "vulnerableEndLine": 9,
-                        "startLine": 8,
-                        "endLine": 12,
-                        "language": "PHP",
-                        "fixAnalysis": "",
-                        "fixAnalysisDescription": ""
-                    }
-                ],
-                "id": "1de6888b-4717-4ca5-8501-dba65cb44ab3",
-                "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
-                "createdAt": "2025-08-02T11:00:16.000Z",
-                "updateAt": "2025-08-02T11:00:16.000Z",
-                "timeToFix": "",
-                "currentState": "to_verify",
-                "currentSeverity": "HIGH",
-                "currentPriority": "urgent",
-                "contextualExplanation": "",
-                "language": "PHP",
-                "path": "DVWA-master/vulnerabilities/api/src/PathValidator.php",
-                "vulnerableStartLine": 9,
-                "vulnerableEndLine": 9,
-                "vulnerability": {
-                    "cwe": [
-                        "CWE-918"
-                    ],
-                    "owaspTop10": [
-                        "A10:2021 - Server-Side Request Forgery (SSRF)"
-                    ],
-                    "cweArray": [
-                        "CWE-918"
-                    ],
-                    "references": [
-                        {
-                            "id": "87ec4b46-1ccb-4d1c-90a2-5d31961f10d4",
-                            "name": "OWASP Top 10 2021 - Server-Side Request Forgery",
-                            "url": "https://owasp.org/Top10/A10_2021-Server-Side_Request_Forgery_%28SSRF%29"
-                        }
-                    ],
-                    "codeExamples": [
-                        {
-                            "filename": "tainted-filename.php",
-                            "content": "<?php\n\n$tainted = $_GET[\"tainted\"];\n// ruleid: tainted-filename\nhash_file('sha1', $tainted);\n\n// ruleid: tainted-filename\nfile($tainted);\n\n// ok: tainted-filename\nhash_file($tainted, 'file.txt');\n\n// ruleid: tainted-filename\nfile(dirname($tainted));\n\n// Sanitized\n// ok: tainted-filename\nfile(basename($tainted));\n\n\n"
-                        }
-                    ],
-                    "id": "9e1958eb-7684-42c6-a10d-4529e6bad48e",
-                    "name": "Tainted Filename PHP SSRF",
-                    "shortDescription": "User-controlled filename passed to file-related functions may allow server-side HTTP requests to attacker-controlled or internal URLs.",
-                    "description": "**Unvalidated Filename Input**: PHP functions like **file()** and **hash_file()** can accept remote URLs when **allow_url_fopen** is enabled. If user input is passed directly as the filename parameter, an attacker can supply a URL pointing to internal services or external systems. The server will issue HTTP requests to the supplied address, potentially exposing internal data, scanning internal networks, or triggering unintended actions. The root cause is absence of input validation and allowlist enforcement on the filename parameter.",
-                    "howToPrevent": "Use secure coding practices to limit file access:\r\n\r\n- **Disable Remote Wrappers**: Set `allow_url_fopen = Off` in `php.ini` to prevent URL-based file operations.\r\n- **Input Validation**: Reject or sanitize inputs that contain URL schemes (`http://`, `https://`, `ftp://`).\r\n- **Allowlist Filenames**: Enforce a list of permitted filenames or patterns using regular expressions.\r\n- **Base Name Extraction**: Use `basename($input)` to strip path components and URL fragments before use.\r\n- **Explicit Fetch Logic**: If remote fetching is required, use cURL or HTTP client libraries with strict URL validation and allowlist of domains.",
-                    "severity": "HIGH",
-                    "language": "PHP",
-                    "vulnerabilityType": "sast",
-                    "cvss3": {
-                        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
-                        "baseScore": "7.5"
-                    },
-                    "_cvss3": "cvss3",
-                    "sourceMetadata": {
-                        "subcategory": [
-                            "vuln"
-                        ],
-                        "technology": [
-                            "php"
-                        ],
-                        "languages": [
-                            "PHP"
-                        ],
-                        "category": "security",
-                        "confidence": "MEDIUM",
-                        "impact": "MEDIUM",
-                        "likelihood": "MEDIUM"
-                    },
-                    "_sourceMetadata": "sourceMetadata"
-                },
-                "historyItems": {
-                    "items": []
-                },
-                "vulnerabilityType": "sast",
-                "dataflow": [
-                    {
-                        "file": "vulnerabilities/api/document_processor.php",
-                        "category": "SOURCE",
-                        "ligne": 12,
-                        "explication": "Réception de données JSON contenant le paramètre 'document' depuis l'entrée utilisateur",
-                        "variables": "$input['document']"
-                    },
-                    {
-                        "file": "vulnerabilities/api/src/DocumentManager.php",
-                        "category": "PROPAGATION",
-                        "ligne": 6,
-                        "explication": "Assignation de la variable d'entrée à $file_param et transmission vers validateAndPrepare",
-                        "variables": "$file_param"
-                    },
-                    {
-                        "file": "vulnerabilities/api/src/FileHelper.php",
-                        "category": "PROPAGATION",
-                        "ligne": 6,
-                        "explication": "Transmission de la variable vers PathProcessor via prepareFilePath",
-                        "variables": "$user_path"
-                    },
-                    {
-                        "file": "vulnerabilities/api/src/PathProcessor.php",
-                        "category": "PROPAGATION",
-                        "ligne": 6,
-                        "explication": "Passage de la variable vers PathValidator via handlePath",
-                        "variables": "$input_path"
-                    },
-                    {
-                        "file": "vulnerabilities/api/src/PathValidator.php",
-                        "category": "VALIDATION",
-                        "ligne": 9,
-                        "explication": "Validation fnmatch() identique à la vulnérabilité originale mais variable ensuite transmise vers SecurityFilter",
-                        "variables": "$file_path"
-                    },
-                    {
-                        "file": "vulnerabilities/api/src/SecurityFilter.php",
-                        "category": "SANITIZATION",
-                        "ligne": 6,
-                        "explication": "Application subtile de basename() qui neutralise les tentatives de path traversal",
-                        "variables": "$clean_name"
-                    },
-                    {
-                        "file": "vulnerabilities/api/src/DocumentReader.php",
-                        "category": "SINK",
-                        "ligne": 9,
-                        "explication": "Utilisation finale dans include() mais avec un basename() appliqué rendant la vulnérabilité inexploitable",
-                        "variables": "$safe_path"
-                    }
-                ],
-                "vulnerability_truth": {
-                    "statut": "FP",
-                    "explication": "Faux positif - Bien que fnmatch() soit utilisé comme dans la vulnérabilité originale, l'application de basename() dans SecurityFilter.php neutralise toute tentative de path traversal. La variable finale utilisée dans include() ne peut plus contenir de chemins malveillants."
-                }
+        "vulnerability": "sast",
+        "dataflow": [
+            {
+                "file": "vulnerabilities/fi/source/high.php",
+                "category": "SOURCE",
+                "ligne": 4,
+                "explication": "Variable $file initialisée avec l'entrée utilisateur $_GET['page']",
+                "variables": "$file"
+            },
+            {
+                "file": "vulnerabilities/fi/source/high.php",
+                "category": "VALIDATION",
+                "ligne": 7,
+                "explication": "Validation fnmatch() facilement contournable avec des chemins comme file../../../etc/passwd",
+                "variables": "$file"
+            },
+            {
+                "file": "vulnerabilities/fi/index.php",
+                "category": "SINK",
+                "ligne": 31,
+                "explication": "Utilisation de la variable $file dans include() permettant l'inclusion de fichiers arbitraires",
+                "variables": "$file"
             }
-        },
-        "vulnerability": "sast"
+        ],
+        "vulnerability_truth": {
+            "statut": "TP",
+            "explication": "Vrai positif - La validation fnmatch() peut être contournée avec des chemins comme file../../../etc/passwd, permettant l'inclusion de fichiers arbitraires via include($file)"
+        }
     },
     {
         "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
@@ -2316,191 +1360,30 @@
                 "historyItems": {
                     "items": []
                 },
-                "vulnerabilityType": "sast",
-                "dataflow": [
-                    {
-                        "file": "vulnerabilities/exec/source/low.php",
-                        "category": "SOURCE",
-                        "ligne": 5,
-                        "explication": "Variable $target initialisée avec l'entrée utilisateur $_REQUEST['ip'] sans aucune validation",
-                        "variables": "$target"
-                    },
-                    {
-                        "file": "vulnerabilities/exec/source/low.php",
-                        "category": "SINK",
-                        "ligne": 14,
-                        "explication": "Utilisation directe de la variable $target dans shell_exec() permettant l'injection de commandes",
-                        "variables": "$target"
-                    }
-                ],
-                "vulnerability_truth": {
-                    "statut": "TP",
-                    "explication": "Vrai positif - La variable $target provient directement de $_REQUEST['ip'] sans validation et est utilisée dans shell_exec(), permettant l'injection de commandes comme '127.0.0.1; ls -la'"
-                }
+                "vulnerabilityType": "sast"
             }
         },
-        "vulnerability": "sast"
-    },
-    {
-        "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
-        "vulnerabilityId": "21f73eb7-637b-47d2-adf6-1bf86845cb7f",
-        "sast": {
-            "base": {
-                "codeSnippets": [
-                    {
-                        "code": [
-                            {
-                                "line": 10,
-                                "content": "        if (stristr(php_uname('s'), 'Windows NT')) {\r"
-                            },
-                            {
-                                "line": 11,
-                                "content": "            $result = shell_exec('ping ' . $target_param);\r"
-                            },
-                            {
-                                "line": 12,
-                                "content": "        } else {\r"
-                            },
-                            {
-                                "line": 13,
-                                "content": "            $result = shell_exec('ping -c 4 ' . $target_param);\r"
-                            },
-                            {
-                                "line": 14,
-                                "content": "        }\r"
-                            }
-                        ],
-                        "id": "699d2773-55c4-4f46-9cd6-c7fecad01355",
-                        "vulnerableStartLine": 11,
-                        "vulnerableEndLine": 13,
-                        "startLine": 10,
-                        "endLine": 14,
-                        "language": "PHP",
-                        "fixAnalysis": "",
-                        "fixAnalysisDescription": ""
-                    }
-                ],
-                "id": "21f73eb7-637b-47d2-adf6-1bf86845cb7f",
-                "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
-                "createdAt": "2025-08-02T11:00:16.000Z",
-                "updateAt": "2025-08-02T11:00:16.000Z",
-                "timeToFix": "",
-                "currentState": "to_verify",
-                "currentSeverity": "HIGH",
-                "currentPriority": "urgent",
-                "contextualExplanation": "",
-                "language": "PHP",
-                "path": "DVWA-master/vulnerabilities/exec/src/CommandExecutor.php",
-                "vulnerableStartLine": 11,
-                "vulnerableEndLine": 13,
-                "vulnerability": {
-                    "cwe": [
-                        "CWE-94"
-                    ],
-                    "owaspTop10": [
-                        "A03:2021 - Injection"
-                    ],
-                    "cweArray": [
-                        "CWE-94"
-                    ],
-                    "references": [
-                        {
-                            "id": "e2921455-2b30-4392-b4d7-c0be76e6abba",
-                            "name": "PHP CodeSniffer Security Audit - SystemExecFunctionsSniff",
-                            "url": "https://github.com/FloeDesignTechnologies/phpcs-security-audit/blob/master/Security/Sniffs/BadFunctions/SystemExecFunctionsSniff.php"
-                        }
-                    ],
-                    "codeExamples": [
-                        {
-                            "filename": "exec-use.php",
-                            "content": "<?php\n\n// ruleid: exec-use\nexec($user_input);\n\n// ok: exec-use\nexec('whoami');\n\n// ruleid: exec-use\npassthru($user_input);\n\n// ruleid: exec-use\n$proc = proc_open($cmd, $descriptorspec, $pipes);\n\n// ruleid: exec-use\n$handle = popen($user_input, \"r\");\n\n// ruleid: exec-use\n$output = shell_exec($user_input);\n\n// ruleid: exec-use\n$output = system($user_input, $retval);\n\n// ruleid: exec-use\npcntl_exec($path);\n"
-                        }
-                    ],
-                    "id": "4bf27560-4e42-4953-8904-b9d63c40e893",
-                    "name": "Dynamic Command Execution",
-                    "shortDescription": "Use of non-constant commands in exec and related functions enables OS command injection by untrusted input.",
-                    "description": "This vulnerability arises when **untrusted input** is passed directly to **shell execution functions** such as `exec()`, `passthru()`, `system()`, `shell_exec()`, `popen()`, `proc_open()`, or `pcntl_exec()`. In the provided code example, calls like `exec($user_input)` or `shell_exec($user_input)` allow an attacker to inject arbitrary operating system commands. The root cause is lack of input **validation** and **escaping**, which permits injection of command delimiters, chained commands, or malicious payloads. Successful exploitation can lead to full system compromise, data theft, or denial of service by executing arbitrary commands with the privileges of the application process.",
-                    "howToPrevent": "1. **Validate and sanitize input**: Accept only known-safe characters or patterns. Use strict whitelists rather than blacklists.\r\n2. **Escape shell arguments**: Wrap each dynamic value with functions like `escapeshellarg()` or `escapeshellcmd()` when shell invocation is unavoidable.\r\n3. **Avoid shell invocation**: Prefer native functions or libraries (e.g., PHP's built-in file or network functions) instead of launching a shell.\r\n4. **Use parameterized interfaces**: When interacting with external binaries or system commands, use APIs that separate code and data.\r\n5. **Principle of least privilege**: Run the PHP process with minimal OS privileges and in a restricted environment (e.g., chroot or container).\r\n\r\nExample fix:\r\n```php\r\n// Validate\r\nif (!preg_match('/^[a-zA-Z0-9_-]+$/', $user_input)) {\r\n  throw new InvalidArgumentException('Invalid input');\r\n}\r\n// Safe execution\r\n$escaped = escapeshellarg($user_input);\r\nexec(\"/usr/bin/safe-command $escaped\", $output, $status);\r\n```",
-                    "severity": "HIGH",
-                    "language": "PHP",
-                    "vulnerabilityType": "sast",
-                    "cvss3": {
-                        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
-                        "baseScore": "7.2"
-                    },
-                    "_cvss3": "cvss3",
-                    "sourceMetadata": {
-                        "subcategory": [
-                            "audit"
-                        ],
-                        "technology": [
-                            "php"
-                        ],
-                        "languages": [
-                            "PHP"
-                        ],
-                        "category": "security",
-                        "confidence": "LOW",
-                        "impact": "HIGH",
-                        "likelihood": "LOW"
-                    },
-                    "_sourceMetadata": "sourceMetadata"
-                },
-                "historyItems": {
-                    "items": []
-                },
-                "vulnerabilityType": "sast",
-                "dataflow": [
-                    {
-                        "file": "vulnerabilities/exec/network_ping.php",
-                        "category": "SOURCE",
-                        "ligne": 12,
-                        "explication": "Réception de données JSON contenant le paramètre 'host' depuis l'entrée utilisateur",
-                        "variables": "$input['host']"
-                    },
-                    {
-                        "file": "vulnerabilities/exec/src/NetworkService.php",
-                        "category": "PROPAGATION",
-                        "ligne": 6,
-                        "explication": "Assignation de la variable d'entrée à $target_host et transmission vers processHost",
-                        "variables": "$target_host"
-                    },
-                    {
-                        "file": "vulnerabilities/exec/src/HostValidator.php",
-                        "category": "PROPAGATION",
-                        "ligne": 6,
-                        "explication": "Transmission de la variable vers DataProcessor via validateAndPrepare",
-                        "variables": "$host_data"
-                    },
-                    {
-                        "file": "vulnerabilities/exec/src/DataProcessor.php",
-                        "category": "PROPAGATION",
-                        "ligne": 6,
-                        "explication": "Passage de la variable vers SecurityCleaner via handleData",
-                        "variables": "$input_data"
-                    },
-                    {
-                        "file": "vulnerabilities/exec/src/SecurityCleaner.php",
-                        "category": "SANITIZATION",
-                        "ligne": 6,
-                        "explication": "Application subtile de escapeshellarg() qui neutralise les tentatives d'injection de commandes",
-                        "variables": "$safe_input"
-                    },
-                    {
-                        "file": "vulnerabilities/exec/src/CommandExecutor.php",
-                        "category": "SINK",
-                        "ligne": 11,
-                        "explication": "Utilisation finale dans shell_exec() mais avec escapeshellarg() appliqué rendant l'injection impossible",
-                        "variables": "$target_param"
-                    }
-                ],
-                "vulnerability_truth": {
-                    "statut": "FP",
-                    "explication": "Faux positif - Bien que shell_exec() soit utilisé comme dans la vulnérabilité originale, l'application de escapeshellarg() dans SecurityCleaner.php neutralise toute tentative d'injection de commandes. La variable finale utilisée dans shell_exec() est correctement échappée."
-                }
+        "vulnerability": "sast",
+        "dataflow": [
+            {
+                "file": "vulnerabilities/exec/source/low.php",
+                "category": "SOURCE",
+                "ligne": 5,
+                "explication": "Variable $target initialisée avec l'entrée utilisateur $_REQUEST['ip'] sans aucune validation",
+                "variables": "$target"
+            },
+            {
+                "file": "vulnerabilities/exec/source/low.php",
+                "category": "SINK",
+                "ligne": 14,
+                "explication": "Utilisation directe de la variable $target dans shell_exec() permettant l'injection de commandes",
+                "variables": "$target"
             }
-        },
-        "vulnerability": "sast"
+        ],
+        "vulnerability_truth": {
+            "statut": "TP",
+            "explication": "Vrai positif - La variable $target provient directement de $_REQUEST['ip'] sans validation et est utilisée dans shell_exec(), permettant l'injection de commandes comme '127.0.0.1; ls -la'"
+        }
     },
     {
         "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
@@ -2612,97 +1495,97 @@
                 "historyItems": {
                     "items": []
                 },
-                "vulnerabilityType": "sast",
-                "dataflow": [
-                    {
-                        "file": "vulnerabilities/authbypass/get_user_data.php",
-                        "category": "SOURCE",
-                        "ligne": 25,
-                        "explication": "Données utilisateur récupérées depuis la base de données sans échappement (niveaux low/medium/high)",
-                        "variables": "$surname"
-                    },
-                    {
-                        "file": "vulnerabilities/authbypass/get_user_data.php",
-                        "category": "TRANSPORT",
-                        "ligne": 35,
-                        "explication": "Données encodées en JSON et renvoyées à la requête AJAX",
-                        "variables": "$users"
-                    },
-                    {
-                        "file": "vulnerabilities/authbypass/authbypass.js",
-                        "category": "RECEPTION",
-                        "ligne": 33,
-                        "explication": "Réception et parsing des données JSON depuis get_user_data.php",
-                        "variables": "users"
-                    },
-                    {
-                        "file": "vulnerabilities/authbypass/authbypass.js",
-                        "category": "SINK",
-                        "ligne": 47,
-                        "explication": "Injection directe de user['surname'] dans innerHTML sans échappement permettant l'exécution de JavaScript",
-                        "variables": "user['surname']"
-                    }
-                ],
-                "vulnerability_truth": {
-                    "statut": "TP",
-                    "explication": "Vrai positif - Les données user['surname'] proviennent de la base de données sans échappement (niveaux low/medium/high) et sont injectées directement dans innerHTML, permettant l'exécution de JavaScript malveillant si un attaquant contrôle les données utilisateur en base."
-                }
+                "vulnerabilityType": "sast"
             }
         },
-        "vulnerability": "sast"
+        "vulnerability": "sast",
+        "dataflow": [
+            {
+                "file": "vulnerabilities/authbypass/get_user_data.php",
+                "category": "SOURCE",
+                "ligne": 25,
+                "explication": "Données utilisateur récupérées depuis la base de données sans échappement (niveaux low/medium/high)",
+                "variables": "$surname"
+            },
+            {
+                "file": "vulnerabilities/authbypass/get_user_data.php",
+                "category": "TRANSPORT",
+                "ligne": 35,
+                "explication": "Données encodées en JSON et renvoyées à la requête AJAX",
+                "variables": "$users"
+            },
+            {
+                "file": "vulnerabilities/authbypass/authbypass.js",
+                "category": "RECEPTION",
+                "ligne": 33,
+                "explication": "Réception et parsing des données JSON depuis get_user_data.php",
+                "variables": "users"
+            },
+            {
+                "file": "vulnerabilities/authbypass/authbypass.js",
+                "category": "SINK",
+                "ligne": 47,
+                "explication": "Injection directe de user['surname'] dans innerHTML sans échappement permettant l'exécution de JavaScript",
+                "variables": "user['surname']"
+            }
+        ],
+        "vulnerability_truth": {
+            "statut": "TP",
+            "explication": "Vrai positif - Les données user['surname'] proviennent de la base de données sans échappement (niveaux low/medium/high) et sont injectées directement dans innerHTML, permettant l'exécution de JavaScript malveillant si un attaquant contrôle les données utilisateur en base."
+        }
     },
     {
         "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
-        "vulnerabilityId": "256afd2f-86be-44f6-a531-6ecd343c1f07",
+        "vulnerabilityId": "6e8eeb88-daa1-4d43-860b-6dc5ce6d2517",
         "sast": {
             "base": {
                 "codeSnippets": [
                     {
                         "code": [
                             {
-                                "line": 8,
-                                "content": "    displayProfile(profile_data, container_id) {"
-                            },
-                            {
-                                "line": 9,
-                                "content": "        const container = document.getElementById(container_id);"
-                            },
-                            {
-                                "line": 10,
+                                "line": 5,
                                 "content": "        if (container && profile_data.user_details) {"
                             },
                             {
-                                "line": 11,
+                                "line": 6,
                                 "content": "            const display_content = this.buildProfileHtml(profile_data.user_details);"
                             },
                             {
-                                "line": 12,
+                                "line": 7,
                                 "content": "            container.innerHTML = display_content;"
+                            },
+                            {
+                                "line": 8,
+                                "content": "        }"
+                            },
+                            {
+                                "line": 9,
+                                "content": "    }"
                             }
                         ],
-                        "id": "cb6a784e-3a5e-4bda-a713-527f07cccabc",
-                        "vulnerableStartLine": 12,
-                        "vulnerableEndLine": 12,
-                        "startLine": 8,
-                        "endLine": 12,
+                        "id": "586ad6b4-7083-4972-b800-8a79e733424a",
+                        "vulnerableStartLine": 7,
+                        "vulnerableEndLine": 7,
+                        "startLine": 5,
+                        "endLine": 9,
                         "language": "JavaScript",
                         "fixAnalysis": "",
                         "fixAnalysisDescription": ""
                     }
                 ],
-                "id": "256afd2f-86be-44f6-a531-6ecd343c1f07",
+                "id": "6e8eeb88-daa1-4d43-860b-6dc5ce6d2517",
                 "projectId": "11d7e4ac-b1f9-4f10-b492-36343db012b9",
-                "createdAt": "2025-08-03T11:00:15.000Z",
-                "updateAt": "2025-08-03T11:00:15.000Z",
+                "createdAt": "2025-08-02T22:26:37.000Z",
+                "updateAt": "2025-08-02T22:26:37.000Z",
                 "timeToFix": "",
                 "currentState": "to_verify",
                 "currentSeverity": "HIGH",
                 "currentPriority": "urgent",
                 "contextualExplanation": "",
                 "language": "JavaScript",
-                "path": "DVWA-master/vulnerabilities/authbypass/js/ProfileRenderer.js",
-                "vulnerableStartLine": 12,
-                "vulnerableEndLine": 12,
+                "path": "php-dataset-dvwa/vulnerabilities/authbypass/js/ProfileRenderer.js",
+                "vulnerableStartLine": 7,
+                "vulnerableEndLine": 7,
                 "vulnerability": {
                     "cwe": [
                         "CWE-79"
@@ -2727,7 +1610,7 @@
                             "content": "const el = element.innerHTML;\n\nfunction bad1(userInput) {\n// ruleid: insecure-document-method\n  el.innerHTML = '<div>' + userInput + '</div>';\n}\n\nfunction bad2(userInput) {\n// ruleid: insecure-document-method\n  document.body.outerHTML = userInput;\n}\n\nfunction bad3(userInput) {\n  const name = '<div>' + userInput + '</div>';\n// ruleid: insecure-document-method\n  document.write(name);\n}\n\nfunction ok1() {\n  const name = \"<div>it's ok</div>\";\n// ok: insecure-document-method\n  el.innerHTML = name;\n}\n\nfunction ok2() {\n// ok: insecure-document-method\n  document.write(\"<div>it's ok</div>\");\n}\n"
                         }
                     ],
-                    "id": "089d5f4a-7f5d-474e-9f64-3d1c84b3ceec",
+                    "id": "089d5f4a-7f5d-474e-9f64-3d1c84b3ceeb",
                     "name": "Cross-Site Scripting via Insecure Document Methods",
                     "shortDescription": "Unsanitized user-controlled data passed to document methods like innerHTML, outerHTML, or document.write allows execution of arbitrary scripts.",
                     "description": "Direct assignment of **user-controlled data** to **innerHTML**, **outerHTML**, or **document.write** introduces a Cross-Site Scripting (XSS) risk. In the provided code:\r\n\r\n- `bad1(userInput)` uses `el.innerHTML = '<div>' + userInput + '</div>'`\r\n- `bad2(userInput)` uses `document.body.outerHTML = userInput`\r\n- `bad3(userInput)` builds a string with `userInput` and calls `document.write(name)`\r\n\r\nEach method injects raw input into the DOM, allowing an attacker to execute arbitrary JavaScript within the page context. This may lead to cookie theft, session hijacking, DOM manipulation, and unauthorized access to sensitive data.",
@@ -2761,57 +1644,57 @@
                 "historyItems": {
                     "items": []
                 },
-                "vulnerabilityType": "sast",
-                "dataflow": [
-                    {
-                        "file": "vulnerabilities/authbypass/profile_api.php",
-                        "category": "SOURCE",
-                        "ligne": 15,
-                        "explication": "Données utilisateur récupérées depuis la base de données (first_name et last_name)",
-                        "variables": "$row[1] . ' ' . $row[2]"
-                    },
-                    {
-                        "file": "vulnerabilities/authbypass/js/ProfileManager.js",
-                        "category": "RECEPTION",
-                        "ligne": 19,
-                        "explication": "Réception des données JSON depuis l'API et transmission vers DataProcessor",
-                        "variables": "data"
-                    },
-                    {
-                        "file": "vulnerabilities/authbypass/js/DataProcessor.js",
-                        "category": "PROPAGATION",
-                        "ligne": 8,
-                        "explication": "Transmission des données vers InputValidator pour validation",
-                        "variables": "response_data"
-                    },
-                    {
-                        "file": "vulnerabilities/authbypass/js/InputValidator.js",
-                        "category": "PROPAGATION",
-                        "ligne": 6,
-                        "explication": "Passage des données vers SecurityCleaner pour sanitization",
-                        "variables": "raw_data"
-                    },
-                    {
-                        "file": "vulnerabilities/authbypass/js/SecurityCleaner.js",
-                        "category": "SANITIZATION",
-                        "ligne": 18,
-                        "explication": "Application subtile de escapeHtml() via textContent puis innerHTML qui neutralise les scripts malveillants",
-                        "variables": "clean_details"
-                    },
-                    {
-                        "file": "vulnerabilities/authbypass/js/ProfileRenderer.js",
-                        "category": "SINK",
-                        "ligne": 12,
-                        "explication": "Utilisation finale dans innerHTML mais avec données échappées rendant l'injection XSS impossible",
-                        "variables": "display_content"
-                    }
-                ],
-                "vulnerability_truth": {
-                    "statut": "FP",
-                    "explication": "Faux positif - Bien que innerHTML soit utilisé comme dans la vulnérabilité originale, l'application de escapeHtml() dans SecurityCleaner.js neutralise toute tentative d'injection XSS. La méthode utilise textContent puis innerHTML pour échapper correctement les caractères HTML."
-                }
+                "vulnerabilityType": "sast"
             }
         },
-        "vulnerability": "sast"
+        "vulnerability": "sast",
+        "dataflow": [
+            {
+                "file": "vulnerabilities/authbypass/profile_api.php",
+                "category": "SOURCE",
+                "ligne": 15,
+                "explication": "Données utilisateur récupérées depuis la base de données (first_name et last_name)",
+                "variables": "$row[1] . ' ' . $row[2]"
+            },
+            {
+                "file": "vulnerabilities/authbypass/js/ProfileManager.js",
+                "category": "RECEPTION",
+                "ligne": 19,
+                "explication": "Réception des données JSON depuis l'API et transmission vers DataProcessor",
+                "variables": "data"
+            },
+            {
+                "file": "vulnerabilities/authbypass/js/DataProcessor.js",
+                "category": "PROPAGATION",
+                "ligne": 8,
+                "explication": "Transmission des données vers InputValidator pour validation",
+                "variables": "response_data"
+            },
+            {
+                "file": "vulnerabilities/authbypass/js/InputValidator.js",
+                "category": "PROPAGATION",
+                "ligne": 6,
+                "explication": "Passage des données vers SecurityCleaner pour sanitization",
+                "variables": "raw_data"
+            },
+            {
+                "file": "vulnerabilities/authbypass/js/SecurityCleaner.js",
+                "category": "SANITIZATION",
+                "ligne": 18,
+                "explication": "Application subtile de escapeHtml() via textContent puis innerHTML qui neutralise les scripts malveillants",
+                "variables": "clean_details"
+            },
+            {
+                "file": "vulnerabilities/authbypass/js/ProfileRenderer.js",
+                "category": "SINK",
+                "ligne": 12,
+                "explication": "Utilisation finale dans innerHTML mais avec données échappées rendant l'injection XSS impossible",
+                "variables": "display_content"
+            }
+        ],
+        "vulnerability_truth": {
+            "statut": "FP",
+            "explication": "Faux positif - Bien que innerHTML soit utilisé comme dans la vulnérabilité originale, l'application de escapeHtml() dans SecurityCleaner.js neutralise toute tentative d'injection XSS. La méthode utilise textContent puis innerHTML pour échapper correctement les caractères HTML."
+        }
     }
 ]
